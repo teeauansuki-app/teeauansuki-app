@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Little Fat Shabu - Table 08</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-high": "#e9e8e7",
+                    "inverse-surface": "#2f3130",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "on-secondary-container": "#6c5000",
+                    "inverse-primary": "#ffb3ac",
+                    "on-primary-fixed-variant": "#930010",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#af101a",
+                    "secondary-fixed-dim": "#fabd00",
+                    "secondary-container": "#fdc003",
+                    "surface-variant": "#e3e2e1",
+                    "surface-dim": "#dadad9",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#a3f69c",
+                    "on-primary-fixed": "#410003",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#1a1c1c",
+                    "tertiary-fixed-dim": "#88d982",
+                    "primary-container": "#d32f2f",
+                    "inverse-on-surface": "#f1f0f0",
+                    "secondary-fixed": "#ffdf9e",
+                    "secondary": "#785900",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f4f3f2",
+                    "on-tertiary-container": "#d8ffd0",
+                    "tertiary-container": "#307f34",
+                    "on-primary-container": "#fff2f0",
+                    "surface-container-highest": "#e3e2e1",
+                    "primary-fixed": "#ffdad6",
+                    "on-secondary-fixed": "#261a00",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed-variant": "#5b4300",
+                    "primary-fixed-dim": "#ffb3ac",
+                    "on-background": "#1a1c1c",
+                    "surface-container": "#eeeeed",
+                    "outline": "#8f6f6c",
+                    "tertiary": "#11651d",
+                    "outline-variant": "#e4beba",
+                    "on-surface-variant": "#5b403d",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#faf9f8",
+                    "background": "#faf9f8",
+                    "surface-tint": "#ba1a20",
+                    "surface": "#faf9f8",
+                    "on-tertiary-fixed": "#002204"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "container-margin": "20px",
+                    "stack-md": "12px",
+                    "stack-sm": "4px",
+                    "stack-lg": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "price-display": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-bold": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "price-display": ["22px", {"lineHeight": "22px", "fontWeight": "800"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-1px", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "38px", "letterSpacing": "-0.5px", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "30px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .squishy-button {
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.3);
+        }
+        
+        .squishy-button:active {
+            transform: scale(0.92) translateY(2px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.2);
+        }
+
+        .soft-glow {
+            box-shadow: 0 10px 30px -10px rgba(175, 16, 26, 0.25);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .shimmer-bg {
+            background: linear-gradient(110deg, #faf9f8 8%, #f4f3f2 18%, #faf9f8 33%);
+            background-size: 200% 100%;
+            animation: 1.5s shine linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position-x: -200%; }
+        }
+
+        .floating-cart {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-fixed-dim selection:text-on-primary-fixed">
+<!-- Top Navigation Anchor (from JSON) -->
+<header class="flex justify-between items-center w-full px-container-margin py-base z-50 fixed top-0 bg-surface dark:bg-inverse-surface shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high border-2 border-primary shadow-sm overflow-hidden">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJE4oi7PIxXiBSQiSvCJfQjmogkzIkoFiofPVSmgyFR46cN7eTqVMCIpLhMQziPcatUFIAhyn4ZiKm3HfNOINMY0n-kcDk8aDLhTAMgEcydMfij2SxRmGUH7kzaCoXhokhIttisCJ53sltt9Ol6i-t2H8905Wpm_clbhZPcgVJrcbaYYe1APOvjuinaG36Oy1fVUu9nZ7UQDq17qB_dbhUXuJHEg82p7wsQx3XgeNvkMAkmt36IGbcwaOMC6KKPAE_Okd2p7wmuXI"/>
+</div>
+<div class="flex flex-col">
+<span class="text-label-bold font-label-bold text-primary dark:text-primary-fixed">Table 08</span>
+<h1 class="text-headline-md-mobile font-headline-md-mobile font-extrabold text-primary dark:text-primary-fixed tracking-tight">Little Fat Shabu</h1>
+</div>
+</div>
+<button class="flex items-center gap-1 px-3 h-10 rounded-full bg-surface-container-low text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[20px]">language</span>
+<span class="text-label-bold font-label-bold">TH/EN</span>
+</button><button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</button>
+</header>
+<main class="pt-[80px] pb-[100px] min-h-screen">
+<!-- Hero: Today's Special -->
+<section class="px-container-margin mt-stack-lg">
+<div class="relative w-full rounded-3xl overflow-hidden soft-glow aspect-[16/9] group">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A macro, mouth-watering close-up of thinly sliced A5 Wagyu beef marbled with intricate white fat, arranged beautifully on a traditional wooden platter. The scene is set in a high-energy, modern Shabu Shabu restaurant with soft, warm golden lighting and steam rising in the background. The aesthetic is Joyful Abundance with vibrant colors and rich textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDDFjZoByTJHh97cW9iAbJmDO3LJQ_2L4ruEPIX07ijkAWcs3G88n5uFUdH88ENWzNNHJ05dh4jqh0UXWXk6mTwSB9TW-oTW-Zj9hXvXHnWUHNrLMr0hM4JiXMC7rzsw8OyIHpkVL8Ciu74RmDawmve5diioqaQ2nRPcwMStkhL1OPFiBm5sErdQphZSEjBGWe5VllPrMsWKFvOtoC0aTnUGa0dMKLF6PMTTdbDEjQU03Vjju0pqoDhvU5rTV8t_SA9hjpkV04sjI"/>
+<div class="absolute bottom-0 left-0 p-container-margin z-20 w-full">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-label-bold font-label-bold mb-2 inline-block">TODAY'S SPECIAL</span>
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-white font-headline-lg-mobile text-headline-lg-mobile">Premium Wagyu Set</h2>
+<p class="text-white/80 font-body-md text-body-md">Melt-in-your-mouth experience with 5 signature sauces.</p>
+</div>
+<div class="text-white text-right">
+<div class="text-price-display font-price-display">$48.00</div>
+<button class="squishy-button mt-2 bg-primary text-on-primary px-5 py-2 rounded-full font-label-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+                                Add
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Category Filters -->
+<section class="mt-stack-lg">
+<div class="flex overflow-x-auto hide-scrollbar gap-3 px-container-margin py-2">
+<button class="flex-shrink-0 px-6 py-2.5 rounded-full bg-primary text-on-primary font-label-bold shadow-sm transition-all scale-100 active:scale-95">All</button>
+<button class="flex-shrink-0 px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-bold hover:bg-surface-variant transition-all active:scale-95">Shabu Sets</button>
+<button class="flex-shrink-0 px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-bold hover:bg-surface-variant transition-all active:scale-95">Meats</button>
+<button class="flex-shrink-0 px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-bold hover:bg-surface-variant transition-all active:scale-95">Vegetables</button>
+<button class="flex-shrink-0 px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-bold hover:bg-surface-variant transition-all active:scale-95">Drinks</button>
+</div>
+</section>
+<!-- Product Grid (Asymmetric/Bento-ish) -->
+<section class="px-container-margin mt-stack-lg">
+<div class="grid grid-cols-2 gap-4">
+<!-- Item 1: Large Card -->
+<div class="col-span-2 bg-white rounded-[24px] p-4 flex gap-4 shadow-sm border border-surface-container-high relative">
+<div class="w-32 h-32 rounded-2xl overflow-hidden flex-shrink-0 bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="A platter of thinly sliced Prime Ribeye beef with deep red color and delicate marbling, presented on a stone plate. The image is bright and appetizing with high-contrast, warm studio lighting that highlights the freshness and quality of the meat in a joyful Shabu restaurant setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfv0iUl3FnYbWitEDl29tirrm3MCSrOLGLKghYdoW3gnpHw26E38wNJ-fgbhxvK-MYp2auLHw5HyA2sFi4geCJsObbYwhyBpv7Gs6NH_Jx7apmFGUNl1FCYYf10kGIEB4weCdak1IDz85s97fDKLOfoC7Y-HT0VrpuAK5KJYbbwN_uQpdK1xMSpAoTdKJa88LTNzve0pknmByqwFdyQ8HQqjjHv1YCxPM9NXFas1juHAKdIiUz-FaXTd8DZMcAOwhGRfkJ0N5LoUQ"/>
+</div>
+<div class="flex flex-col justify-between py-1 grow">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Prime Ribeye</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2">Premium cut with rich flavor and tender texture.</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-primary font-price-display text-price-display">$22.50</span>
+<button class="squishy-button w-10 h-10 bg-primary text-on-primary rounded-full flex items-center justify-center" onclick="addToCart(this)">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="bg-white rounded-[24px] p-4 shadow-sm border border-surface-container-high flex flex-col gap-3">
+<div class="aspect-square rounded-2xl overflow-hidden bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="A plate of fresh, pink Kurobuta Pork Belly slices arranged in a fan shape, glistening under bright restaurant lights. The background features subtle textures of rice steam and wooden dining surfaces, maintaining a cheerful and modern culinary aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNglf4PW6Gg5J78tly8xNCmVHbghVG_Z0_xHK60lP6q6DfSJEV3vRxd2eWkC8ShcqyKmLFvsq5YECOyheHqtITUQjiH6rkBmXYzdZ55U9AVV430PbUNkADpNiEFOTIAsIesHugwaRbQGfyKmfaHkW-kfoIqwJhSKKmEWe22iFQDnme0Rzyl7v5Qw_hEk1hQ_asGx-Tvf4l54OqD0lF_qVlirr6WxTVTCqiiJqMBOaW1-7_J0K89c2_eDeQ5W2g8mzoEjSoSnknmlU"/>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface">Pork Belly</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-primary font-price-display text-price-display">$14.90</span>
+<button class="squishy-button w-8 h-8 bg-primary text-on-primary rounded-full flex items-center justify-center" onclick="addToCart(this)">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="bg-white rounded-[24px] p-4 shadow-sm border border-surface-container-high flex flex-col gap-3">
+<div class="aspect-square rounded-2xl overflow-hidden bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="A colorful assorted vegetable basket for Shabu Shabu including vibrant green bok choy, bright orange carrots, various mushrooms, and fresh corn on the cob. The image is shot with high saturation and crisp focus to emphasize healthy, 'Joyful Abundance' vibes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZzp93aSESJkXGIvNmH1ZR6yLR9l1L_RC8bOtFP5jkMj3XYXioJ5VNevcBWObhktULzHMfBmcxZspYt-KgkCsl9X742LOUIMEvz4H5g-QNB1JFzba2DT77RgIF8Ji6-bfj7Ndbtbr0SHMwCACVzM7g3nHOcFNExG-ee3A2V8wA_hri1_-DSHW5LiOlvrYUq38N6Srb_SQY6yzn1puBAzfhGfTnjxoctp65pJu910T2SQPF9EBuKmBNJwoVsORVW-ptIROfNVjncc0"/>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface">Assorted Veggies</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-primary font-price-display text-price-display">$12.00</span>
+<button class="squishy-button w-8 h-8 bg-primary text-on-primary rounded-full flex items-center justify-center" onclick="addToCart(this)">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 4: Wide Card -->
+<div class="col-span-2 bg-secondary/5 rounded-[24px] p-4 border-2 border-dashed border-secondary/20 flex items-center gap-4">
+<div class="w-16 h-16 bg-secondary-container rounded-full flex items-center justify-center text-on-secondary-container flex-shrink-0">
+<span class="material-symbols-outlined text-3xl">restaurant</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-secondary-fixed-variant">New: Truffle Broth</h4>
+<p class="text-sm text-on-surface-variant">Upgrade your soup base for an aromatic earthy experience.</p>
+</div>
+<div class="ml-auto">
+<span class="text-secondary font-label-bold">+$5.00</span>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="bg-white rounded-[24px] p-4 shadow-sm border border-surface-container-high flex flex-col gap-3">
+<div class="aspect-square rounded-2xl overflow-hidden bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="Fresh, plump prawns and green-lipped mussels displayed on a bed of crushed ice. The lighting is cool and bright, emphasizing the freshness of the seafood with sparkling reflections. Part of the Little Fat Shabu joyful dining visual system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnGeaC-4CtjqEhe7H0qLP73kx1IV4lwqufqVfyQNz3Secvd5TzY4eF75wz_uMmGtnXt7UWt6nqZLISonpm9Xwh6gDlGtnXix9Sxr39oM2EDjMMKLitxpCyE6-wm7ahJ9Y_ZhueCoDxy14z_XU-H7IGFPWf4jfEhh4dWg-M0lvnBrzZDhxu7QnwyCK7hL5I4ayOvCpIsPCbU21Xw62pvxRBHPi6qGi6WSO8Rz2xHlaGFn1aHM4tp1tpcPelI0-rNt3HWgGV16Up0z4"/>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface">Seafood Mix</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-primary font-price-display text-price-display">$26.00</span>
+<button class="squishy-button w-8 h-8 bg-primary text-on-primary rounded-full flex items-center justify-center" onclick="addToCart(this)">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 6 -->
+<div class="bg-white rounded-[24px] p-4 shadow-sm border border-surface-container-high flex flex-col gap-3">
+<div class="aspect-square rounded-2xl overflow-hidden bg-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="A large bowl of golden, rich Shabu broth with floating aromatics like goji berries and herbs. Steam is rising gracefully in a 3D-inspired soft-lighting style that evokes hunger and comfort." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpnP6HcxCKyOyut41LPOc46_Hjcd9vJSz7CqJg2U06w1joz3eM1kfj-dtdWFVzdGQaFk_p6WzrVPtIM_9oL3UMDvZIYblEKvQIEVwVww0eFu12LQkbAWIXzTDPRiqm5-ZQeCTMlONFd4XqwJUS5_wpTQXyp6frMYVhNL0mmswpWEcpC-C86vecKb58f2cwRMlz73JIJZvGi52PF8BO99nkSH6pL7bD6n0x6X9z7_uvad-y5NB6ADe3LBDDbrAxu7NETpqppeehObQ"/>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface">Signature Broth</h3>
+<div class="flex justify-between items-center mt-2">
+<span class="text-primary font-price-display text-price-display">$8.00</span>
+<button class="squishy-button w-8 h-8 bg-primary text-on-primary rounded-full flex items-center justify-center" onclick="addToCart(this)">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Cart Status (Appears when items are added) -->
+<div class="fixed bottom-24 right-container-margin z-40 hidden" id="cart-bubble">
+<div class="floating-cart bg-primary-container text-on-primary-container px-4 py-3 rounded-full shadow-lg flex items-center gap-3 border-2 border-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_basket</span>
+<span class="font-label-bold" id="item-count">1 Item added</span>
+</div>
+</div>
+<!-- Bottom Navigation Shell (from JSON) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-2 pb-safe bg-surface-container-lowest dark:bg-inverse-surface shadow-[0_-4px_12px_rgba(175,16,26,0.08)] rounded-t-xl">
+<!-- Menu (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-6 py-2 shadow-sm scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
+<span class="text-label-bold font-label-bold">Menu</span>
+</a>
+<!-- Cart (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-2 hover:bg-surface-variant/50 dark:hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">shopping_basket</span>
+<span class="text-label-bold font-label-bold">Cart</span>
+</a>
+<!-- Orders (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-2 hover:bg-surface-variant/50 dark:hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-label-bold font-label-bold">Orders</span>
+</a>
+</nav>
+<script>
+        let count = 0;
+        function addToCart(btn) {
+            count++;
+            const bubble = document.getElementById('cart-bubble');
+            const label = document.getElementById('item-count');
+            
+            label.textContent = count + (count === 1 ? ' Item added' : ' Items added');
+            bubble.classList.remove('hidden');
+            
+            // Visual feedback on button
+            const icon = btn.querySelector('.material-symbols-outlined');
+            const originalIcon = icon.textContent;
+            icon.textContent = 'check';
+            btn.classList.replace('bg-primary', 'bg-tertiary');
+            
+            setTimeout(() => {
+                icon.textContent = originalIcon;
+                btn.classList.replace('bg-tertiary', 'bg-primary');
+            }, 1000);
+
+            // Simple pulse animation for the bubble
+            bubble.animate([
+                { transform: 'scale(1)' },
+                { transform: 'scale(1.1)' },
+                { transform: 'scale(1)' }
+            ], { duration: 300, easing: 'ease-out' });
+        }
+
+        // Add a soft atmospheric effect to the background
+        document.addEventListener('DOMContentLoaded', () => {
+            const bg = document.createElement('div');
+            bg.className = 'fixed inset-0 -z-10 pointer-events-none opacity-20';
+            bg.innerHTML = '<div class="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary-container blur-[120px] rounded-full"></div><div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary-fixed-dim blur-[100px] rounded-full"></div>';
+            document.body.appendChild(bg);
+        });
+    </script>
+</body></html>
