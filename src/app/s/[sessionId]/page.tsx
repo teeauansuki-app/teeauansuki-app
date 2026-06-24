@@ -4,11 +4,17 @@ import OrderClient from './OrderClient';
 
 interface PageProps {
   params: Promise<{ sessionId: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, searchParams }: PageProps) {
   const { sessionId } = await params;
-  const initialData = await getMenuForSession(sessionId);
+  const query = await searchParams;
+  const initialData = await getMenuForSession(sessionId, {
+    offline: query.offline,
+    tableNumber: query.t,
+    packageId: query.p,
+  });
 
   // If there's an error retrieving active session, show error screen
   if ('error' in initialData) {

@@ -3,9 +3,13 @@ package com.teeuan.shabuwrapper;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -15,10 +19,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String DEFAULT_SERVER_URL = "https://teeauansuki-app.vercel.app/login";
+    private static final String DEFAULT_ORDER_BASE_URL = "https://teeauansuki-app.vercel.app";
+
     private WebView myWebView;
     private SunmiQrPrinterManager printerManager;
     private String serverUrl;
     private SharedPreferences sharedPref;
+    private boolean offlineAuthenticated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,17 +36,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(myWebView);
 
         sharedPref = getSharedPreferences("TeeUanPrefs", Context.MODE_PRIVATE);
-        serverUrl = sharedPref.getString("server_url", "http://10.0.2.2:3000/cashier");
+        serverUrl = sharedPref.getString("server_url", DEFAULT_SERVER_URL);
         printerManager = new SunmiQrPrinterManager(this);
 
         setupWebView();
-
-        if (sharedPref.getBoolean("first_launch", true)) {
-            showUrlConfigDialog();
-            sharedPref.edit().putBoolean("first_launch", false).apply();
-        } else {
-            myWebView.loadUrl(serverUrl);
-        }
+        myWebView.loadUrl(serverUrl);
     }
 
     @Override
@@ -66,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setUseWideViewPort(true);
         webSettings.setSupportZoom(false);
         webSettings.setBuiltInZoomControls(false);
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        webSettings.setMediaPlaybackRequiresUserGesture(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            webSettings.setOffscreenPreRaster(true);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            webSettings.setSafeBrowsingEnabled(true);
+        }
 
         SunmiPrinterBridge bridge = new SunmiPrinterBridge(this, printerManager);
         myWebView.addJavascriptInterface(bridge, "AndroidPrintInterface");
@@ -77,12 +87,71 @@ public class MainActivity extends AppCompatActivity {
                 view.loadUrl(url);
                 return true;
             }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                if (failingUrl != null && failingUrl.equals(serverUrl)) {
+                    showOfflineLoginPage("โหลดระบบออนไลน์ไม่ได้ กรุณาเข้าใช้งานโหมดออฟไลน์");
+                }
+            }
+        });
+
+        myWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+                if (isFinishing() || isDestroyed()) {
+                    result.cancel();
+                    return true;
+                }
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage(message == null ? "" : message)
+                        .setCancelable(true)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                result.confirm();
+                            }
+                        })
+                        .setOnCancelListener(dialog -> result.cancel())
+                        .show();
+                return true;
+            }
+
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
+                if (isFinishing() || isDestroyed()) {
+                    result.cancel();
+                    return true;
+                }
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage(message == null ? "" : message)
+                        .setCancelable(true)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                result.confirm();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                result.cancel();
+                            }
+                        })
+                        .setOnCancelListener(dialog -> result.cancel())
+                        .show();
+                return true;
+            }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, 1, 0, "ตั้งค่า Server URL");
+        menu.add(0, 2, 0, "พิมพ์ QR ออฟไลน์");
+        menu.add(0, 1, 1, "ตั้งค่า Server URL");
         return true;
     }
 
@@ -92,17 +161,25 @@ public class MainActivity extends AppCompatActivity {
             showUrlConfigDialog();
             return true;
         }
+        if (item.getItemId() == 2) {
+            if (offlineAuthenticated) {
+                showOfflineQrPage("");
+            } else {
+                showOfflineLoginPage("");
+            }
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     private void showUrlConfigDialog() {
         final EditText input = new EditText(this);
         input.setText(serverUrl);
-        input.setHint("http://192.168.1.50:3000/cashier");
+        input.setHint(DEFAULT_SERVER_URL);
 
         new AlertDialog.Builder(this)
                 .setTitle("ตั้งค่า Server URL")
-                .setMessage("กรอก URL หน้าแคชเชียร์ของระบบ")
+                .setMessage("กรอก URL หน้าเข้าสู่ระบบ")
                 .setView(input)
                 .setPositiveButton("บันทึกและโหลดใหม่", new DialogInterface.OnClickListener() {
                     @Override
@@ -117,6 +194,50 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("ยกเลิก", null)
                 .show();
+    }
+
+    public String getOrderBaseUrl() {
+        try {
+            Uri uri = Uri.parse(serverUrl);
+            if (uri.getScheme() == null || uri.getHost() == null) {
+                return DEFAULT_ORDER_BASE_URL;
+            }
+            Uri.Builder builder = new Uri.Builder()
+                    .scheme(uri.getScheme())
+                    .encodedAuthority(uri.getEncodedAuthority());
+            return builder.build().toString();
+        } catch (Exception error) {
+            return DEFAULT_ORDER_BASE_URL;
+        }
+    }
+
+    private void showOfflineLoginPage(String notice) {
+        String safeNotice = notice == null ? "" : notice;
+
+        myWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url != null && url.startsWith("offline-qr://open")) {
+                    showOfflineQrPage("");
+                    return true;
+                }
+                view.loadUrl(url);
+                return true;
+            }
+        });
+        myWebView.loadUrl("file:///android_asset/offline-login.html?notice=" + Uri.encode(safeNotice));
+    }
+
+    private void showOfflineQrPage(String notice) {
+        myWebView.loadUrl("file:///android_asset/offline-qr.html");
+    }
+
+    public boolean validateOfflinePin(String pin) {
+        boolean ok = "111111".equals(pin) || "999999".equals(pin);
+        if (ok) {
+            offlineAuthenticated = true;
+        }
+        return ok;
     }
 
     @Override
@@ -135,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
             myWebView.removeJavascriptInterface("AndroidPrinter");
             myWebView.stopLoading();
             myWebView.loadUrl("about:blank");
+            myWebView.setWebChromeClient(null);
             myWebView.destroy();
         }
         super.onDestroy();

@@ -33,8 +33,8 @@ public class SunmiQrPrinterManager {
     private static final int STATUS_BLACK_MARK_NOT_DETECTED = 9;
     private static final int STATUS_NO_PRINTER_DETECTED = 505;
     private static final int STATUS_FIRMWARE_UPDATING = 507;
-    private static final int MAX_LOGO_WIDTH_PX = 280;
-    private static final int MIN_LOGO_WIDTH_PX = 96;
+    private static final int MAX_LOGO_WIDTH_PX = 150;
+    private static final int MIN_LOGO_WIDTH_PX = 72;
 
     private final Context context;
     private final ReentrantLock printLock = new ReentrantLock();
@@ -133,7 +133,7 @@ public class SunmiQrPrinterManager {
                     service.printText("เวลาพิมพ์: " + printedAt + "\n", null);
                     service.printText("--------------------------------\n", null);
                     service.lineWrap(1, null);
-                    service.printQRCode(qrUrl, 8, 3, null);
+                    service.printQRCode(qrUrl, 5, 3, null);
                     service.lineWrap(1, null);
                     service.printTextWithFont("สแกน QR เพื่อสั่งอาหาร\n", null, 24.0f, null);
                     service.printText("ผ่านโทรศัพท์ของลูกค้า\n", null);

@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>เปิดโต๊ะออฟไลน์</title>
+  <style>
+    :root {
+      --brand: #af101a;
+      --brand-dark: #800c13;
+      --gold: #8a6900;
+      --ink: #211716;
+      --muted: #6f5652;
+      --line: #f1dddd;
+      --paper: #ffffff;
+      --bg: #faf9f8;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 16% -4%, rgba(175,16,26,.08), transparent 30%),
+        radial-gradient(circle at 100% 90%, rgba(253,192,3,.10), transparent 34%),
+        var(--bg);
+      color: var(--ink);
+      font-family: "Sukhumvit Set", "Tahoma", sans-serif;
+      user-select: none;
+    }
+
+    .screen {
+      min-height: 100vh;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 2px 2px;
+    }
+
+    .logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 999px;
+      object-fit: cover;
+      background: #fff;
+      border: 2px solid var(--brand);
+      box-shadow: 0 10px 20px rgba(175,16,26,.13);
+      flex: none;
+    }
+
+    .title {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .eyebrow {
+      color: var(--brand);
+      font-size: 13px;
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    h1 {
+      margin: 2px 0 0;
+      font-size: 26px;
+      line-height: 1.05;
+      font-weight: 1000;
+      letter-spacing: 0;
+      color: var(--ink);
+    }
+
+    .pill {
+      padding: 10px 13px;
+      border-radius: 999px;
+      background: #fff2f3;
+      border: 1px solid #efc6ca;
+      color: var(--brand);
+      font-size: 13px;
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .panel {
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(255,255,255,.95);
+      border-radius: 32px;
+      box-shadow: 0 22px 58px rgba(0,0,0,.045);
+      padding: 18px;
+      backdrop-filter: blur(16px);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .bar {
+      width: 5px;
+      height: 42px;
+      border-radius: 999px;
+      background: var(--brand);
+      flex: none;
+    }
+
+    .section-title {
+      font-size: 24px;
+      line-height: 1.05;
+      font-weight: 1000;
+    }
+
+    .section-sub {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 8px;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 1000;
+    }
+
+    input {
+      width: 100%;
+      height: 72px;
+      border: 2px solid #ead0d0;
+      border-radius: 24px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 34px;
+      font-weight: 1000;
+      text-align: center;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(0,0,0,.02);
+    }
+
+    input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 5px rgba(175,16,26,.08);
+    }
+
+    .packages {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .package {
+      min-height: 104px;
+      border: 2px solid #ead0d0;
+      border-radius: 24px;
+      background: #fff;
+      padding: 13px;
+      text-align: left;
+      color: var(--ink);
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .package.active {
+      border-color: var(--brand);
+      background: #fff2f3;
+      box-shadow: 0 0 0 5px rgba(175,16,26,.07);
+    }
+
+    .package strong {
+      display: block;
+      font-size: 18px;
+      font-weight: 1000;
+      line-height: 1.05;
+    }
+
+    .package span {
+      display: block;
+      margin-top: 7px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .primary {
+      width: 100%;
+      height: 64px;
+      margin-top: 18px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #d31b28, var(--brand));
+      color: white;
+      font-size: 20px;
+      font-weight: 1000;
+      letter-spacing: 0;
+      box-shadow: 0 7px 0 var(--brand-dark), 0 14px 28px rgba(175,16,26,.20);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .primary:active {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 var(--brand-dark), 0 10px 18px rgba(175,16,26,.16);
+    }
+
+    .hint {
+      margin-top: 13px;
+      padding: 12px 13px;
+      border-radius: 18px;
+      background: #fffaf0;
+      border: 1px solid #f2dfad;
+      color: #71580a;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.45;
+    }
+
+    .status {
+      min-height: 22px;
+      margin-top: 12px;
+      color: var(--brand);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 1000;
+    }
+  </style>
+</head>
+<body>
+  <main class="screen">
+    <header class="top">
+      <img class="logo" src="file:///android_res/drawable/logo.jpg" alt="ตี๋อ้วน สุกี้ชาบู">
+      <div class="title">
+        <div class="eyebrow">หลังบ้านผู้ดูแลระบบ</div>
+        <h1>ตี๋อ้วน สุกี้ชาบู</h1>
+      </div>
+      <div class="pill">Offline</div>
+    </header>
+
+    <section class="panel">
+      <div class="section-head">
+        <i class="bar"></i>
+        <div>
+          <div class="section-title">เปิดโต๊ะ</div>
+          <div class="section-sub">พิมพ์ QR สำหรับให้ลูกค้าสั่งอาหาร</div>
+        </div>
+      </div>
+
+      <label for="table">เลขโต๊ะ</label>
+      <input id="table" inputmode="numeric" type="number" min="1" max="999" placeholder="6" autofocus>
+
+      <label>แพ็กเกจ</label>
+      <div class="packages">
+        <button class="package active" id="standard" onclick="selectPackage('standard')" type="button">
+          <strong>Standard</strong>
+          <span>บุฟเฟต์มาตรฐาน</span>
+        </button>
+        <button class="package" id="premium" onclick="selectPackage('premium')" type="button">
+          <strong>Premium</strong>
+          <span>เมนูพรีเมียมและซีฟู้ด</span>
+        </button>
+      </div>
+
+      <button class="primary" onclick="printQr()" type="button">เปิดโต๊ะและพิมพ์ QR</button>
+      <div class="status" id="status"></div>
+      <div class="hint">เครื่อง SUNMI ไม่ต้องมีเน็ตในการพิมพ์ QR แต่ลูกค้าต้องเปิด QR ด้วยอินเทอร์เน็ตของลูกค้าเพื่อสร้างโต๊ะจริงบนระบบออนไลน์</div>
+    </section>
+  </main>
+
+  <script>
+    var packageId = 'standard';
+
+    function selectPackage(value) {
+      packageId = value;
+      document.getElementById('standard').classList.toggle('active', value === 'standard');
+      document.getElementById('premium').classList.toggle('active', value === 'premium');
+    }
+
+    function printQr() {
+      var table = document.getElementById('table').value.trim();
+      var status = document.getElementById('status');
+      if (!table) {
+        status.textContent = 'กรุณากรอกเลขโต๊ะ';
+        return;
+      }
+
+      status.textContent = 'กำลังพิมพ์ QR...';
+      var result = AndroidPrinter.printOfflineQr(table, packageId);
+      if (result.indexOf('ok') === 0) {
+        status.textContent = 'พิมพ์ QR เรียบร้อยแล้ว';
+        return;
+      }
+      status.textContent = 'พิมพ์ QR ไม่สำเร็จ: ' + result;
+    }
+  </script>
+</body>
+</html>

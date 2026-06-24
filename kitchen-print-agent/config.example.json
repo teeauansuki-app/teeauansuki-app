@@ -1,0 +1,6 @@
+{
+  "printerName": "POS-80C",
+  "restaurantName": "ตี๋อ้วน สุกี้ชาบู",
+  "pollIntervalMs": 3000,
+  "batchSize": 1
+}

@@ -184,6 +184,102 @@ function validateSelectedOptions(menuItem: any, selectedOptions: any[] = []) {
   }
 }
 
+type OfflineSessionContext = {
+  tableNumber?: string | string[];
+  packageId?: string | string[];
+  offline?: string | string[];
+};
+
+function firstSearchValue(value?: string | string[]) {
+  if (Array.isArray(value)) return value[0];
+  return value;
+}
+
+function isValidUuid(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+}
+
+function normalizeOfflineSessionContext(context?: OfflineSessionContext) {
+  if (firstSearchValue(context?.offline) !== '1') return null;
+
+  const tableNumber = Number.parseInt(firstSearchValue(context?.tableNumber) || '', 10);
+  const packageId = firstSearchValue(context?.packageId);
+
+  if (!Number.isInteger(tableNumber) || tableNumber <= 0 || tableNumber > 999) return null;
+  if (packageId !== 'standard' && packageId !== 'premium') return null;
+
+  return { tableNumber, packageId };
+}
+
+async function ensureOfflineSession(
+  supabase: ReturnType<typeof getSupabaseAdmin>,
+  sessionId: string,
+  context?: OfflineSessionContext
+) {
+  const offlineContext = normalizeOfflineSessionContext(context);
+  if (!offlineContext || !isValidUuid(sessionId)) return null;
+
+  const { data: existingSession, error: existingSessionError } = await supabase
+    .from('sessions')
+    .select('*, tables(table_number), packages(name)')
+    .eq('id', sessionId)
+    .maybeSingle();
+
+  if (existingSessionError) {
+    throw new Error(`Failed to check offline session: ${existingSessionError.message}`);
+  }
+
+  if (existingSession) {
+    return existingSession.status === 'active' ? existingSession : null;
+  }
+
+  const { data: table, error: tableError } = await supabase
+    .from('tables')
+    .select('id, table_number')
+    .eq('table_number', offlineContext.tableNumber)
+    .maybeSingle();
+
+  if (tableError) {
+    throw new Error(`Failed to find offline table: ${tableError.message}`);
+  }
+
+  if (!table) return null;
+
+  await supabase
+    .from('sessions')
+    .update({ status: 'completed', closed_at: new Date().toISOString() })
+    .eq('table_id', table.id)
+    .eq('status', 'active');
+
+  const { error: updateTableError } = await supabase
+    .from('tables')
+    .update({ status: 'occupied' })
+    .eq('id', table.id);
+
+  if (updateTableError) {
+    throw new Error(`Failed to occupy offline table: ${updateTableError.message}`);
+  }
+
+  const { data: createdSession, error: createSessionError } = await supabase
+    .from('sessions')
+    .insert({
+      id: sessionId,
+      table_id: table.id,
+      package_id: offlineContext.packageId,
+      status: 'active',
+    })
+    .select('*, tables(table_number), packages(name)')
+    .single();
+
+  if (createSessionError || !createdSession) {
+    await supabase.from('tables').update({ status: 'vacant' }).eq('id', table.id);
+    throw new Error(`Failed to create offline session: ${createSessionError?.message}`);
+  }
+
+  revalidatePath('/cashier');
+  return createdSession;
+}
+
 async function attachOptionGroupsToMenuItems(supabase: any, items: any[] = []) {
   if (items.length === 0) return [];
 
@@ -393,7 +489,7 @@ export async function closeTableSession(sessionId: string) {
 }
 
 // Customer: Load menus filtered by session package
-export async function getMenuForSession(sessionId: string) {
+export async function getMenuForSession(sessionId: string, offlineContext?: OfflineSessionContext) {
   if (!isSupabaseConfigured) {
     // Find active session in our mock tables
     let activeSession: any = null;
@@ -437,14 +533,22 @@ export async function getMenuForSession(sessionId: string) {
   const supabase = getSupabaseAdmin();
 
   // 1. Get session and table details
-  const { data: session, error: sessionError } = await supabase
+  let { data: session, error: sessionError } = await supabase
     .from('sessions')
     .select('*, tables(table_number), packages(name)')
     .eq('id', sessionId)
     .eq('status', 'active')
-    .single();
+    .maybeSingle();
 
-  if (sessionError || !session) {
+  if (sessionError) {
+    throw new Error(`Failed to fetch session: ${sessionError.message}`);
+  }
+
+  if (!session) {
+    session = await ensureOfflineSession(supabase, sessionId, offlineContext);
+  }
+
+  if (!session) {
     return { error: 'โต๊ะนี้ยังไม่ได้เปิดระบบ หรือเซสชันหมดอายุแล้ว กรุณาติดต่อแคชเชียร์' };
   }
 

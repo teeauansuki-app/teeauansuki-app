@@ -2,11 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Delete } from 'lucide-react';
 import { validateStaffPin } from '../actions';
 
 // Custom SVG Shabu Pot shape in active brand color style matching cashier page's occupied table pot
-function ShabuPotShape({ className = "w-full h-full absolute inset-0 -z-10", isActive = false }) {
+type ShabuPotShapeProps = {
+  className?: string;
+  isActive?: boolean;
+};
+
+const ShabuPotShape = React.memo(function ShabuPotShape({
+  className = "w-full h-full absolute inset-0 -z-10",
+  isActive = false,
+}: ShabuPotShapeProps) {
   // All parts styled in the exact same brand red (#af101a) with darker red outlines (#800c13) for definition
   const strokeColor = "stroke-[#800c13]";
   const handleFill = "#af101a";
@@ -18,72 +27,81 @@ function ShabuPotShape({ className = "w-full h-full absolute inset-0 -z-10", isA
   return (
     <svg 
       viewBox="0 0 100 100" 
-      className={`${className} transition-all duration-200 group-hover:scale-105 ${isActive ? 'scale-95 brightness-90' : 'group-hover:drop-shadow-[0_4px_8px_rgba(175,16,26,0.15)]'}`} 
+      className={`${className} transition-transform duration-100 ${isActive ? 'scale-95 brightness-90' : ''}`} 
       fill="none" 
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMidYMid meet"
     >
       {/* Handles */}
-      <rect x="8" y="44" width="8" height="12" rx="4" fill={handleFill} className={`${strokeColor} transition-colors duration-150`} strokeWidth="2" />
-      <rect x="84" y="44" width="8" height="12" rx="4" fill={handleFill} className={`${strokeColor} transition-colors duration-150`} strokeWidth="2" />
+      <rect x="8" y="44" width="8" height="12" rx="4" fill={handleFill} className={strokeColor} strokeWidth="2" />
+      <rect x="84" y="44" width="8" height="12" rx="4" fill={handleFill} className={strokeColor} strokeWidth="2" />
 
       {/* Main Pot Outer Ring */}
-      <circle cx="50" cy="50" r="36" fill={potOuterFill} className={`${strokeColor} transition-colors duration-150`} strokeWidth="2" />
-      <circle cx="50" cy="50" r="33" fill={potInnerShadow} className="transition-colors duration-150" /> {/* Inner wall shadow */}
+      <circle cx="50" cy="50" r="36" fill={potOuterFill} className={strokeColor} strokeWidth="2" />
+      <circle cx="50" cy="50" r="33" fill={potInnerShadow} /> {/* Inner wall shadow */}
       
       {/* Left Spicy Soup (Red Mala) - S-curve boundary */}
       <path 
         d="M 50 20 A 30 30 0 0 0 50 80 C 33 65, 67 35, 50 20 Z" 
         fill={soupLeft} 
-        className="transition-colors duration-150"
       />
       
       {/* Right Clear/Gold Soup (Sukiyaki Black) - S-curve boundary */}
       <path 
         d="M 50 20 C 67 35, 33 65, 50 80 A 30 30 0 0 0 50 20 Z" 
         fill={soupRight} 
-        className="transition-colors duration-150"
       />
 
       {/* Yin-Yang S-Curve Divider */}
       <path 
         d="M 50 20 C 67 35, 33 65, 50 80" 
-        className={`${strokeColor} transition-colors duration-150`} 
+        className={strokeColor} 
         strokeWidth="2.5" 
         strokeLinecap="round" 
       />
       
       {/* Pot Rim Stroke */}
-      <circle cx="50" cy="50" r="30" className={`${strokeColor} transition-colors duration-150`} strokeWidth="2.5" />
+      <circle cx="50" cy="50" r="30" className={strokeColor} strokeWidth="2.5" />
     </svg>
   );
-}
+});
 
 interface ShabuKeyProps {
   num: string;
   onClick: (num: string) => void;
 }
 
-function ShabuKey({ num, onClick }: ShabuKeyProps) {
+const ShabuKey = React.memo(function ShabuKey({ num, onClick }: ShabuKeyProps) {
   const [isActive, setIsActive] = useState(false);
 
   return (
     <button
       type="button"
       onClick={() => onClick(num)}
-      onMouseDown={() => setIsActive(true)}
-      onMouseUp={() => setIsActive(false)}
-      onMouseLeave={() => setIsActive(false)}
-      onTouchStart={() => setIsActive(true)}
-      onTouchEnd={() => setIsActive(false)}
-      className="group relative w-20 h-20 sm:w-24 sm:h-24 flex flex-col items-center justify-center active:scale-95 transition-all duration-150 cursor-pointer border-none bg-transparent outline-none focus:outline-none"
+      onPointerDown={() => setIsActive(true)}
+      onPointerUp={() => setIsActive(false)}
+      onPointerCancel={() => setIsActive(false)}
+      onPointerLeave={() => setIsActive(false)}
+      className="relative w-20 h-20 sm:w-24 sm:h-24 flex flex-col items-center justify-center active:scale-95 transition-transform duration-100 cursor-pointer border-none bg-transparent outline-none focus:outline-none touch-manipulation"
     >
       <ShabuPotShape isActive={isActive} />
       {/* White text with glow shadow for high legibility over colored soup background */}
       <span className="text-2xl sm:text-3xl font-black text-white text-glow leading-none select-none">{num}</span>
     </button>
   );
-}
+});
+
+const PIN_KEYS = [
+  { num: '1', letters: '' },
+  { num: '2', letters: 'A B C' },
+  { num: '3', letters: 'D E F' },
+  { num: '4', letters: 'G H I' },
+  { num: '5', letters: 'J K L' },
+  { num: '6', letters: 'M N O' },
+  { num: '7', letters: 'P Q R S' },
+  { num: '8', letters: 'T U V' },
+  { num: '9', letters: 'W X Y Z' },
+];
 
 export default function PinPage() {
   const [pin, setPin] = useState<string>('');
@@ -91,7 +109,7 @@ export default function PinPage() {
   const [isShaking, setIsShaking] = useState<boolean>(false);
   const router = useRouter();
 
-  function handleNumberPress(num: string) {
+  const handleNumberPress = React.useCallback((num: string) => {
     setPin(prev => {
       if (prev.length < 6) {
         setErrorMessage('');
@@ -99,20 +117,20 @@ export default function PinPage() {
       }
       return prev;
     });
-  }
+  }, []);
 
   // Handle keyboard entry listener (0-9, Backspace, Esc/Delete)
-  function handleBackspace() {
+  const handleBackspace = React.useCallback(() => {
     setPin(prev => {
       setErrorMessage('');
       return prev.slice(0, -1);
     });
-  }
+  }, []);
 
-  function handleClear() {
+  const handleClear = React.useCallback(() => {
     setPin('');
     setErrorMessage('');
-  }
+  }, []);
 
   useEffect(() => {
     if (pin.length === 6) {
@@ -153,46 +171,14 @@ export default function PinPage() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
-
-  // Passcode keys details (iOS high-end passcode vibe)
-  const keys = [
-    { num: '1', letters: '' },
-    { num: '2', letters: 'A B C' },
-    { num: '3', letters: 'D E F' },
-    { num: '4', letters: 'G H I' },
-    { num: '5', letters: 'J K L' },
-    { num: '6', letters: 'M N O' },
-    { num: '7', letters: 'P Q R S' },
-    { num: '8', letters: 'T U V' },
-    { num: '9', letters: 'W X Y Z' },
-  ];
+  }, [handleNumberPress, handleBackspace, handleClear]);
 
   return (
     <div className="relative w-screen h-screen h-[100dvh] bg-[#faf9f8] flex items-center justify-center overflow-hidden font-sans select-none">
       
-      {/* Hidden SVG Filter for Swirling Fluid Smoke Turbulence */}
-      <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" className="absolute w-0 h-0 pointer-events-none">
-        <defs>
-          <filter id="smokeFilter" x="-50%" y="-50%" width="200%" height="200%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise">
-              <animate attributeName="baseFrequency" dur="25s" values="0.01 0.015;0.02 0.025;0.01 0.015" repeatCount="indefinite" />
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="70" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-      </svg>
-
-      {/* Animated Smoke/Steam Floating Background Effect */}
-      <div className="smoke-particle smoke-1" />
-      <div className="smoke-particle smoke-2" />
-      <div className="smoke-particle smoke-3" />
-      <div className="smoke-particle smoke-4" />
-      <div className="smoke-particle smoke-5" />
-
       {/* Background Decorative Blur Blobs (Luxury Ambient Glow) */}
-      <div className="absolute top-[-10%] left-[-10%] w-[350px] h-[350px] rounded-full bg-[#af101a]/8 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] rounded-full bg-[#fdc003]/8 blur-[120px] pointer-events-none" />
+      <div className="hidden sm:block absolute top-[-10%] left-[-10%] w-[260px] h-[260px] rounded-full bg-[#af101a]/8 blur-[70px] pointer-events-none" />
+      <div className="hidden sm:block absolute bottom-[-10%] right-[-10%] w-[300px] h-[300px] rounded-full bg-[#fdc003]/8 blur-[80px] pointer-events-none" />
 
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes shake {
@@ -214,69 +200,6 @@ export default function PinPage() {
              1px  1px 0 rgba(0, 0, 0, 0.8),
              0px 2px 4px rgba(0,0,0,0.6);
         }
-        @keyframes smokeRise {
-          0% {
-            transform: translateY(110vh) translateX(0) scale(0.6) rotate(0deg);
-            opacity: 0;
-          }
-          15% {
-            opacity: 0.85;
-          }
-          50% {
-            transform: translateY(50vh) translateX(60px) scale(1.3) rotate(180deg);
-            opacity: 0.95;
-          }
-          85% {
-            opacity: 0.55;
-          }
-          100% {
-            transform: translateY(-20vh) translateX(-60px) scale(1.8) rotate(360deg);
-            opacity: 0;
-          }
-        }
-        .smoke-particle {
-          position: absolute;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(253, 192, 3, 0.22) 35%, rgba(175, 16, 26, 0.1) 60%, rgba(175, 16, 26, 0) 80%);
-          filter: url(#smokeFilter) blur(20px);
-          pointer-events: none;
-          opacity: 0;
-          z-index: 1;
-        }
-        .smoke-1 {
-          width: 250px;
-          height: 250px;
-          left: 10%;
-          animation: smokeRise 25s linear infinite;
-        }
-        .smoke-2 {
-          width: 320px;
-          height: 320px;
-          left: 40%;
-          animation: smokeRise 32s linear infinite;
-          animation-delay: -8s;
-        }
-        .smoke-3 {
-          width: 210px;
-          height: 210px;
-          left: 70%;
-          animation: smokeRise 20s linear infinite;
-          animation-delay: -4s;
-        }
-        .smoke-4 {
-          width: 280px;
-          height: 280px;
-          left: 25%;
-          animation: smokeRise 28s linear infinite;
-          animation-delay: -14s;
-        }
-        .smoke-5 {
-          width: 230px;
-          height: 230px;
-          left: 85%;
-          animation: smokeRise 23s linear infinite;
-          animation-delay: -18s;
-        }
       `}} />
 
       {/* Main Glass Card container - Full screen height on Mobile, Centered widget on Desktop */}
@@ -285,7 +208,15 @@ export default function PinPage() {
         {/* Top Branding Section */}
         <div className="flex flex-col items-center text-center mt-6 sm:mt-0">
           <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border border-[#af101a] mb-3 shadow-[0_8px_20px_rgba(175,16,26,0.12)] bg-white flex-shrink-0">
-            <img src="/logo.jpg" alt="ตี๋อ้วน สุกี้ชาบู Logo" className="w-full h-full object-cover" />
+            <Image
+              src="/logo.jpg"
+              alt="ตี๋อ้วน สุกี้ชาบู Logo"
+              width={128}
+              height={128}
+              priority
+              sizes="128px"
+              className="w-full h-full object-cover"
+            />
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-[#af101a] tracking-tight leading-tight">ตี๋อ้วน สุกี้ชาบู</h1>
           <p className="text-[10px] text-neutral-400 font-extrabold mt-1.5 uppercase tracking-widest">Staff Access Portal</p>
@@ -317,7 +248,7 @@ export default function PinPage() {
 
         {/* Keyboard Panel with Shabu Pot buttons */}
         <div className="grid grid-cols-3 gap-y-4 gap-x-4 sm:gap-y-5 sm:gap-x-6 w-full max-w-[300px] sm:max-w-none justify-items-center">
-          {keys.map((key) => (
+          {PIN_KEYS.map((key) => (
             <ShabuKey
               key={key.num}
               num={key.num}

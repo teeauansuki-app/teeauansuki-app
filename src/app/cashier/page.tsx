@@ -39,7 +39,17 @@ interface Package {
 }
 
 // Modern Vector Shabu Pot Icon matching the logo's branding with S-curve, tea-colored Sukiyaki soup, and warm copper finish
-function ModernShabuIcon({ className = "w-14 h-14", isOccupied = false, isPremium = false }) {
+type ModernShabuIconProps = {
+  className?: string;
+  isOccupied?: boolean;
+  isPremium?: boolean;
+};
+
+const ModernShabuIcon = React.memo(function ModernShabuIcon({
+  className = "w-14 h-14",
+  isOccupied = false,
+  isPremium = false,
+}: ModernShabuIconProps) {
   // Outline and base colors based on state
   const strokeColor = isOccupied ? "stroke-[#6e371a]" : "stroke-neutral-300";
   const handleFill = isOccupied ? "url(#copperMetallic)" : "#e5e5e5";
@@ -113,6 +123,40 @@ function ModernShabuIcon({ className = "w-14 h-14", isOccupied = false, isPremiu
       <circle cx="50" cy="50" r="30" className={`${strokeColor}`} strokeWidth="2.5" />
     </svg>
   );
+});
+
+function formatLiveTime() {
+  const now = new Date();
+  return now.toLocaleDateString('th-TH', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  }) + ' น.';
+}
+
+function LiveClock() {
+  const [liveTime, setLiveTime] = useState<string>('');
+
+  useEffect(() => {
+    setLiveTime(formatLiveTime());
+    const interval = setInterval(() => {
+      setLiveTime(formatLiveTime());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!liveTime) return null;
+
+  return (
+    <div className="flex items-center gap-2 bg-neutral-50 px-4 py-2.5 rounded-2xl border border-neutral-200 text-xs sm:text-sm font-black text-neutral-700">
+      <span className="material-symbols-outlined text-[18px] text-neutral-500">schedule</span>
+      <span>{liveTime}</span>
+    </div>
+  );
 }
 
 export default function CashierPage() {
@@ -144,31 +188,11 @@ export default function CashierPage() {
   // App URL for QR Code
   const [appUrl, setAppUrl] = useState('http://localhost:3000');
   
-  // Live Clock State
-  const [liveTime, setLiveTime] = useState<string>('');
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setAppUrl(window.location.origin);
     }
     fetchData();
-
-    // Clock Tick
-    const updateTime = () => {
-      const now = new Date();
-      setLiveTime(now.toLocaleDateString('th-TH', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      }) + ' น.');
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -393,12 +417,7 @@ export default function CashierPage() {
         </div>
         
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
-          {liveTime && (
-            <div className="flex items-center gap-2 bg-neutral-50 px-4 py-2.5 rounded-2xl border border-neutral-200 text-xs sm:text-sm font-black text-neutral-700">
-              <span className="material-symbols-outlined text-[18px] text-neutral-500">schedule</span>
-              <span>{liveTime}</span>
-            </div>
-          )}
+          <LiveClock />
           <button 
             onClick={fetchData} 
             className="flex items-center justify-center gap-2 bg-[#af101a] hover:bg-[#900e15] text-white px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold shadow-sm hover:shadow-md transition-all cursor-pointer"

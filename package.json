@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "kitchen:print-agent": "node kitchen-print-agent/agent.mjs",
+    "kitchen:test-print": "node kitchen-print-agent/test-print.mjs",
+    "kitchen:list-printers": "node kitchen-print-agent/list-printers.mjs",
+    "kitchen:retry-failed": "node kitchen-print-agent/retry-failed.mjs",
+    "kitchen:unlock-pending": "node kitchen-print-agent/unlock-pending.mjs"
   },
   "dependencies": {
     "next": "16.2.9",
