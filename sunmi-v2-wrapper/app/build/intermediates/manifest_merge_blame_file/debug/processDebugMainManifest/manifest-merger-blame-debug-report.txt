@@ -15,151 +15,327 @@
 13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 13-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:6:5-79
 13-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:6:22-76
-14
-15    <!-- Query configuration for SUNMI AIDL Printer Service in Android 11+ -->
-16    <queries>
-16-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:9:5-18:15
-17        <package android:name="woyou.aidlservice.jiuiv5" />
-17-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:10:9-60
-17-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:10:18-57
-18
-19        <intent>
-19-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:11:9-13:18
-20            <action android:name="woyou.aidlservice.jiuiv5.IWoyouService" />
-20-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:12:13-77
-20-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:12:21-74
-21        </intent>
-22
-23        <package android:name="woyou.aidlinterface.retrofit" />
-23-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:14:9-64
-23-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:14:18-61
+14    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+14-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:7:5-77
+14-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:7:22-74
+15    <uses-permission android:name="android.permission.WAKE_LOCK" />
+15-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:8:5-68
+15-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:8:22-65
+16
+17    <!-- Query configuration for SUNMI AIDL Printer Service in Android 11+ -->
+18    <queries>
+18-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:11:5-20:15
+19        <package android:name="woyou.aidlservice.jiuiv5" />
+19-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:12:9-60
+19-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:12:18-57
+20
+21        <intent>
+21-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:13:9-15:18
+22            <action android:name="woyou.aidlservice.jiuiv5.IWoyouService" />
+22-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:14:13-77
+22-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:14:21-74
+23        </intent>
 24
-25        <intent>
-25-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:15:9-17:18
-26            <action android:name="woyou.aidlinterface.retrofit.IWoyouService" />
-26-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:16:13-81
-26-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:16:21-78
-27        </intent>
-28    </queries>
-29
-30    <permission
-30-->[androidx.core:core:1.9.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\0d0ffafdfa5a375fa02eafc8a955c0d0\transformed\core-1.9.0\AndroidManifest.xml:22:5-24:47
-31        android:name="com.teeuan.shabuwrapper.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-31-->[androidx.core:core:1.9.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\0d0ffafdfa5a375fa02eafc8a955c0d0\transformed\core-1.9.0\AndroidManifest.xml:23:9-81
-32        android:protectionLevel="signature" />
-32-->[androidx.core:core:1.9.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\0d0ffafdfa5a375fa02eafc8a955c0d0\transformed\core-1.9.0\AndroidManifest.xml:24:9-44
-33
-34    <uses-permission android:name="com.teeuan.shabuwrapper.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-34-->[androidx.core:core:1.9.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\0d0ffafdfa5a375fa02eafc8a955c0d0\transformed\core-1.9.0\AndroidManifest.xml:26:5-97
-34-->[androidx.core:core:1.9.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\0d0ffafdfa5a375fa02eafc8a955c0d0\transformed\core-1.9.0\AndroidManifest.xml:26:22-94
-35
-36    <application
-36-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:20:5-39:19
-37        android:allowBackup="true"
-37-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:21:9-35
-38        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-38-->[androidx.core:core:1.9.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\0d0ffafdfa5a375fa02eafc8a955c0d0\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
-39        android:debuggable="true"
-40        android:extractNativeLibs="true"
-41        android:hardwareAccelerated="true"
-41-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:27:9-43
-42        android:icon="@drawable/logo"
-42-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:22:9-38
-43        android:label="@string/app_name"
-43-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:23:9-41
-44        android:roundIcon="@drawable/logo"
-44-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:24:9-43
-45        android:supportsRtl="true"
-45-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:25:9-35
-46        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-46-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:28:9-65
-47        android:usesCleartextTraffic="true" >
-47-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:26:9-44
-48        <activity
-48-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:30:9-38:20
-49            android:name="com.teeuan.shabuwrapper.MainActivity"
-49-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:31:13-41
-50            android:configChanges="orientation|screenSize|keyboardHidden"
-50-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:33:13-74
-51            android:exported="true" >
-51-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:32:13-36
-52            <intent-filter>
-52-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:34:13-37:29
-53                <action android:name="android.intent.action.MAIN" />
-53-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:35:17-69
-53-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:35:25-66
-54
-55                <category android:name="android.intent.category.LAUNCHER" />
-55-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:36:17-77
-55-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:36:27-74
-56            </intent-filter>
-57        </activity>
-58
-59        <provider
-59-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\a06090a1538561fa7629fb17d1bd31fa\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
-60            android:name="androidx.startup.InitializationProvider"
-60-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\a06090a1538561fa7629fb17d1bd31fa\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:25:13-67
-61            android:authorities="com.teeuan.shabuwrapper.androidx-startup"
-61-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\a06090a1538561fa7629fb17d1bd31fa\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:26:13-68
-62            android:exported="false" >
-62-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\a06090a1538561fa7629fb17d1bd31fa\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:27:13-37
-63            <meta-data
-63-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\a06090a1538561fa7629fb17d1bd31fa\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
-64                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-64-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\a06090a1538561fa7629fb17d1bd31fa\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:30:17-75
-65                android:value="androidx.startup" />
-65-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\a06090a1538561fa7629fb17d1bd31fa\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:31:17-49
-66            <meta-data
-66-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\Riew\.gradle\caches\9.0.0\transforms\c7646672a38ee073e8e1ac743c093de4\transformed\jetified-lifecycle-process-2.6.1\AndroidManifest.xml:29:13-31:52
-67                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-67-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\Riew\.gradle\caches\9.0.0\transforms\c7646672a38ee073e8e1ac743c093de4\transformed\jetified-lifecycle-process-2.6.1\AndroidManifest.xml:30:17-78
-68                android:value="androidx.startup" />
-68-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\Riew\.gradle\caches\9.0.0\transforms\c7646672a38ee073e8e1ac743c093de4\transformed\jetified-lifecycle-process-2.6.1\AndroidManifest.xml:31:17-49
-69            <meta-data
-69-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
-70                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-70-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
-71                android:value="androidx.startup" />
-71-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
-72        </provider>
-73
-74        <receiver
-74-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
-75            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-75-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
-76            android:directBootAware="false"
-76-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
-77            android:enabled="true"
-77-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
-78            android:exported="true"
-78-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
-79            android:permission="android.permission.DUMP" >
-79-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
-80            <intent-filter>
-80-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
-81                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-81-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
-81-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
-82            </intent-filter>
-83            <intent-filter>
-83-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
-84                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-84-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
-84-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
-85            </intent-filter>
-86            <intent-filter>
-86-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
-87                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-87-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
-87-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
-88            </intent-filter>
-89            <intent-filter>
-89-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
-90                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-90-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
-90-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\417f41fc6921b9c3212dd0e275991000\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
-91            </intent-filter>
-92        </receiver>
-93    </application>
+25        <package android:name="woyou.aidlinterface.retrofit" />
+25-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:16:9-64
+25-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:16:18-61
+26
+27        <intent>
+27-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:17:9-19:18
+28            <action android:name="woyou.aidlinterface.retrofit.IWoyouService" />
+28-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:18:13-81
+28-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:18:21-78
+29        </intent>
+30    </queries>
+31
+32    <!-- Required by older versions of Google Play services to create IID tokens -->
+33    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+33-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:26:5-82
+33-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:26:22-79
+34
+35    <permission
+35-->[androidx.core:core:1.13.1] C:\Users\Riew\.gradle\caches\9.0.0\transforms\ec321c48ec9f4989f7e55362c14931d4\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+36        android:name="com.teeuan.shabuwrapper.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+36-->[androidx.core:core:1.13.1] C:\Users\Riew\.gradle\caches\9.0.0\transforms\ec321c48ec9f4989f7e55362c14931d4\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+37        android:protectionLevel="signature" />
+37-->[androidx.core:core:1.13.1] C:\Users\Riew\.gradle\caches\9.0.0\transforms\ec321c48ec9f4989f7e55362c14931d4\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+38
+39    <uses-permission android:name="com.teeuan.shabuwrapper.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+39-->[androidx.core:core:1.13.1] C:\Users\Riew\.gradle\caches\9.0.0\transforms\ec321c48ec9f4989f7e55362c14931d4\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+39-->[androidx.core:core:1.13.1] C:\Users\Riew\.gradle\caches\9.0.0\transforms\ec321c48ec9f4989f7e55362c14931d4\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+40
+41    <application
+41-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:22:5-49:19
+42        android:allowBackup="true"
+42-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:23:9-35
+43        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+43-->[androidx.core:core:1.13.1] C:\Users\Riew\.gradle\caches\9.0.0\transforms\ec321c48ec9f4989f7e55362c14931d4\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
+44        android:debuggable="true"
+45        android:extractNativeLibs="true"
+46        android:hardwareAccelerated="true"
+46-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:29:9-43
+47        android:icon="@drawable/logo"
+47-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:24:9-38
+48        android:label="@string/app_name"
+48-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:25:9-41
+49        android:roundIcon="@drawable/logo"
+49-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:26:9-43
+50        android:supportsRtl="true"
+50-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:27:9-35
+51        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+51-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:30:9-65
+52        android:usesCleartextTraffic="true" >
+52-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:28:9-44
+53        <activity
+53-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:32:9-40:20
+54            android:name="com.teeuan.shabuwrapper.MainActivity"
+54-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:33:13-41
+55            android:configChanges="orientation|screenSize|keyboardHidden"
+55-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:35:13-74
+56            android:exported="true" >
+56-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:34:13-36
+57            <intent-filter>
+57-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:36:13-39:29
+58                <action android:name="android.intent.action.MAIN" />
+58-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:37:17-69
+58-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:37:25-66
+59
+60                <category android:name="android.intent.category.LAUNCHER" />
+60-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:38:17-77
+60-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:38:27-74
+61            </intent-filter>
+62        </activity>
+63
+64        <service
+64-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:42:9-48:19
+65            android:name="com.teeuan.shabuwrapper.TeeUanMessagingService"
+65-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:43:13-51
+66            android:exported="false" >
+66-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:44:13-37
+67            <intent-filter>
+67-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:45:13-47:29
+68                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+68-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:46:17-78
+68-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:46:25-75
+69            </intent-filter>
+70        </service>
+71
+72        <provider
+72-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\01d6afa18d182ad3ddb5f9fc39d39db3\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+73            android:name="androidx.startup.InitializationProvider"
+73-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\01d6afa18d182ad3ddb5f9fc39d39db3\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:25:13-67
+74            android:authorities="com.teeuan.shabuwrapper.androidx-startup"
+74-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\01d6afa18d182ad3ddb5f9fc39d39db3\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:26:13-68
+75            android:exported="false" >
+75-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\01d6afa18d182ad3ddb5f9fc39d39db3\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:27:13-37
+76            <meta-data
+76-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\01d6afa18d182ad3ddb5f9fc39d39db3\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+77                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+77-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\01d6afa18d182ad3ddb5f9fc39d39db3\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:30:17-75
+78                android:value="androidx.startup" />
+78-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\01d6afa18d182ad3ddb5f9fc39d39db3\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:31:17-49
+79            <meta-data
+79-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\4c208fe5328083178d0572190bf9f8be\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
+80                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+80-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\4c208fe5328083178d0572190bf9f8be\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
+81                android:value="androidx.startup" />
+81-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\4c208fe5328083178d0572190bf9f8be\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
+82            <meta-data
+82-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
+83                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+83-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
+84                android:value="androidx.startup" />
+84-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
+85        </provider>
+86
+87        <receiver
+87-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:29:9-40:20
+88            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+88-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:30:13-78
+89            android:exported="true"
+89-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:31:13-36
+90            android:permission="com.google.android.c2dm.permission.SEND" >
+90-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:32:13-73
+91            <intent-filter>
+91-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:33:13-35:29
+92                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+92-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:34:17-81
+92-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:34:25-78
+93            </intent-filter>
 94
-95</manifest>
+95            <meta-data
+95-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:37:13-39:40
+96                android:name="com.google.android.gms.cloudmessaging.FINISHED_AFTER_HANDLED"
+96-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:38:17-92
+97                android:value="true" />
+97-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:39:17-37
+98        </receiver>
+99        <!--
+100             FirebaseMessagingService performs security checks at runtime,
+101             but set to not exported to explicitly avoid allowing another app to call it.
+102        -->
+103        <service
+103-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:46:9-53:19
+104            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+104-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:47:13-82
+105            android:directBootAware="true"
+105-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:48:13-43
+106            android:exported="false" >
+106-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:49:13-37
+107            <intent-filter android:priority="-500" >
+107-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:45:13-47:29
+108                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+108-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:46:17-78
+108-->C:\Users\Riew\Desktop\Job_NBV\ตี๋อ้วน-สุกี้ชาบู\sunmi-v2-wrapper\app\src\main\AndroidManifest.xml:46:25-75
+109            </intent-filter>
+110        </service>
+111        <service
+111-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:54:9-63:19
+112            android:name="com.google.firebase.components.ComponentDiscoveryService"
+112-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:55:13-84
+113            android:directBootAware="true"
+113-->[com.google.firebase:firebase-common:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\9214544990eeec99e2aaa921752a4281\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:32:13-43
+114            android:exported="false" >
+114-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:56:13-37
+115            <meta-data
+115-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:57:13-59:85
+116                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar"
+116-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:58:17-122
+117                android:value="com.google.firebase.components.ComponentRegistrar" />
+117-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:59:17-82
+118            <meta-data
+118-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:60:13-62:85
+119                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+119-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:61:17-119
+120                android:value="com.google.firebase.components.ComponentRegistrar" />
+120-->[com.google.firebase:firebase-messaging:24.1.2] C:\Users\Riew\.gradle\caches\9.0.0\transforms\2ed8fd787a2ad4677699657daddf69e2\transformed\jetified-firebase-messaging-24.1.2\AndroidManifest.xml:62:17-82
+121            <meta-data
+121-->[com.google.firebase:firebase-installations:18.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\760329f80a1b3db76ecfebe5b5979dde\transformed\jetified-firebase-installations-18.0.0\AndroidManifest.xml:15:13-17:85
+122                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar"
+122-->[com.google.firebase:firebase-installations:18.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\760329f80a1b3db76ecfebe5b5979dde\transformed\jetified-firebase-installations-18.0.0\AndroidManifest.xml:16:17-130
+123                android:value="com.google.firebase.components.ComponentRegistrar" />
+123-->[com.google.firebase:firebase-installations:18.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\760329f80a1b3db76ecfebe5b5979dde\transformed\jetified-firebase-installations-18.0.0\AndroidManifest.xml:17:17-82
+124            <meta-data
+124-->[com.google.firebase:firebase-installations:18.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\760329f80a1b3db76ecfebe5b5979dde\transformed\jetified-firebase-installations-18.0.0\AndroidManifest.xml:18:13-20:85
+125                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+125-->[com.google.firebase:firebase-installations:18.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\760329f80a1b3db76ecfebe5b5979dde\transformed\jetified-firebase-installations-18.0.0\AndroidManifest.xml:19:17-127
+126                android:value="com.google.firebase.components.ComponentRegistrar" />
+126-->[com.google.firebase:firebase-installations:18.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\760329f80a1b3db76ecfebe5b5979dde\transformed\jetified-firebase-installations-18.0.0\AndroidManifest.xml:20:17-82
+127            <meta-data
+127-->[com.google.firebase:firebase-common-ktx:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\201f9b9cbd7765e5b8681b932c71df2c\transformed\jetified-firebase-common-ktx-21.0.0\AndroidManifest.xml:12:13-14:85
+128                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar"
+128-->[com.google.firebase:firebase-common-ktx:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\201f9b9cbd7765e5b8681b932c71df2c\transformed\jetified-firebase-common-ktx-21.0.0\AndroidManifest.xml:13:17-116
+129                android:value="com.google.firebase.components.ComponentRegistrar" />
+129-->[com.google.firebase:firebase-common-ktx:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\201f9b9cbd7765e5b8681b932c71df2c\transformed\jetified-firebase-common-ktx-21.0.0\AndroidManifest.xml:14:17-82
+130            <meta-data
+130-->[com.google.firebase:firebase-common:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\9214544990eeec99e2aaa921752a4281\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:35:13-37:85
+131                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+131-->[com.google.firebase:firebase-common:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\9214544990eeec99e2aaa921752a4281\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:36:17-109
+132                android:value="com.google.firebase.components.ComponentRegistrar" />
+132-->[com.google.firebase:firebase-common:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\9214544990eeec99e2aaa921752a4281\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:37:17-82
+133            <meta-data
+133-->[com.google.firebase:firebase-datatransport:18.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\e493d8ab0564eec26abefb620d42330e\transformed\jetified-firebase-datatransport-18.2.0\AndroidManifest.xml:25:13-27:85
+134                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+134-->[com.google.firebase:firebase-datatransport:18.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\e493d8ab0564eec26abefb620d42330e\transformed\jetified-firebase-datatransport-18.2.0\AndroidManifest.xml:26:17-115
+135                android:value="com.google.firebase.components.ComponentRegistrar" />
+135-->[com.google.firebase:firebase-datatransport:18.2.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\e493d8ab0564eec26abefb620d42330e\transformed\jetified-firebase-datatransport-18.2.0\AndroidManifest.xml:27:17-82
+136        </service>
+137
+138        <activity
+138-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\957f77a9edf33943ba57fb600a17e8fb\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:20:9-22:45
+139            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+139-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\957f77a9edf33943ba57fb600a17e8fb\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:20:19-85
+140            android:exported="false"
+140-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\957f77a9edf33943ba57fb600a17e8fb\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:22:19-43
+141            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+141-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\957f77a9edf33943ba57fb600a17e8fb\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:21:19-78
+142
+143        <provider
+143-->[com.google.firebase:firebase-common:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\9214544990eeec99e2aaa921752a4281\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:23:9-28:39
+144            android:name="com.google.firebase.provider.FirebaseInitProvider"
+144-->[com.google.firebase:firebase-common:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\9214544990eeec99e2aaa921752a4281\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:24:13-77
+145            android:authorities="com.teeuan.shabuwrapper.firebaseinitprovider"
+145-->[com.google.firebase:firebase-common:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\9214544990eeec99e2aaa921752a4281\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:25:13-72
+146            android:directBootAware="true"
+146-->[com.google.firebase:firebase-common:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\9214544990eeec99e2aaa921752a4281\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:26:13-43
+147            android:exported="false"
+147-->[com.google.firebase:firebase-common:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\9214544990eeec99e2aaa921752a4281\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:27:13-37
+148            android:initOrder="100" />
+148-->[com.google.firebase:firebase-common:21.0.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\9214544990eeec99e2aaa921752a4281\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:28:13-36
+149
+150        <meta-data
+150-->[com.google.android.gms:play-services-basement:18.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\14a454bd7376e4eafca03dfa3a8fdad7\transformed\jetified-play-services-basement-18.3.0\AndroidManifest.xml:21:9-23:69
+151            android:name="com.google.android.gms.version"
+151-->[com.google.android.gms:play-services-basement:18.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\14a454bd7376e4eafca03dfa3a8fdad7\transformed\jetified-play-services-basement-18.3.0\AndroidManifest.xml:22:13-58
+152            android:value="@integer/google_play_services_version" />
+152-->[com.google.android.gms:play-services-basement:18.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\14a454bd7376e4eafca03dfa3a8fdad7\transformed\jetified-play-services-basement-18.3.0\AndroidManifest.xml:23:13-66
+153
+154        <service
+154-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\477a6642b25e09723f4eb20ec258fa28\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:28:9-34:19
+155            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+155-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\477a6642b25e09723f4eb20ec258fa28\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:29:13-103
+156            android:exported="false" >
+156-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\477a6642b25e09723f4eb20ec258fa28\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:30:13-37
+157            <meta-data
+157-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\477a6642b25e09723f4eb20ec258fa28\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:31:13-33:39
+158                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+158-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\477a6642b25e09723f4eb20ec258fa28\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:32:17-94
+159                android:value="cct" />
+159-->[com.google.android.datatransport:transport-backend-cct:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\477a6642b25e09723f4eb20ec258fa28\transformed\jetified-transport-backend-cct-3.1.9\AndroidManifest.xml:33:17-36
+160        </service>
+161        <service
+161-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\d8aefc1d96c600860090736f052893e8\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:26:9-30:19
+162            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+162-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\d8aefc1d96c600860090736f052893e8\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:27:13-117
+163            android:exported="false"
+163-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\d8aefc1d96c600860090736f052893e8\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:28:13-37
+164            android:permission="android.permission.BIND_JOB_SERVICE" >
+164-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\d8aefc1d96c600860090736f052893e8\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:29:13-69
+165        </service>
+166
+167        <receiver
+167-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\d8aefc1d96c600860090736f052893e8\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:32:9-34:40
+168            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+168-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\d8aefc1d96c600860090736f052893e8\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:33:13-132
+169            android:exported="false" />
+169-->[com.google.android.datatransport:transport-runtime:3.1.9] C:\Users\Riew\.gradle\caches\9.0.0\transforms\d8aefc1d96c600860090736f052893e8\transformed\jetified-transport-runtime-3.1.9\AndroidManifest.xml:34:13-37
+170        <receiver
+170-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
+171            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+171-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
+172            android:directBootAware="false"
+172-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
+173            android:enabled="true"
+173-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
+174            android:exported="true"
+174-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
+175            android:permission="android.permission.DUMP" >
+175-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
+176            <intent-filter>
+176-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
+177                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+177-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
+177-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
+178            </intent-filter>
+179            <intent-filter>
+179-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
+180                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+180-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
+180-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
+181            </intent-filter>
+182            <intent-filter>
+182-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
+183                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+183-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
+183-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
+184            </intent-filter>
+185            <intent-filter>
+185-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
+186                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+186-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
+186-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Riew\.gradle\caches\9.0.0\transforms\5b88b87b59080851dd7ecf571f644f2c\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
+187            </intent-filter>
+188        </receiver>
+189    </application>
+190
+191</manifest>

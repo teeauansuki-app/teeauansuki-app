@@ -29,6 +29,7 @@ create table if not exists tables (
   id bigint generated always as identity primary key,
   table_number integer not null unique check (table_number > 0),
   status text not null default 'vacant' check (status in ('vacant', 'occupied')),
+  is_active boolean not null default true,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -88,6 +89,27 @@ create table if not exists menu_option_choices (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- menu item variants table (serving sizes with quantity limits)
+create table if not exists menu_item_variants (
+  id bigint generated always as identity primary key,
+  menu_item_id bigint not null references menu_items(id) on delete cascade,
+  name text not null,
+  min_quantity integer not null default 1 check (min_quantity >= 0),
+  max_quantity integer not null default 1 check (max_quantity >= min_quantity),
+  sort_order integer not null default 0,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- multiple images per menu item
+create table if not exists menu_item_images (
+  id bigint generated always as identity primary key,
+  menu_item_id bigint not null references menu_items(id) on delete cascade,
+  image_url text not null,
+  sort_order integer not null default 0,
+  is_primary boolean not null default false,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
 -- orders table
 create table if not exists orders (
   id bigint generated always as identity primary key,
@@ -116,16 +138,45 @@ create table if not exists print_jobs (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- POS devices for native push notifications
+create table if not exists pos_devices (
+  id bigint generated always as identity primary key,
+  name text not null,
+  fcm_token text not null unique,
+  is_active boolean not null default true,
+  last_seen_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- customer staff call queue
+create table if not exists staff_calls (
+  id bigint generated always as identity primary key,
+  session_id uuid not null references sessions(id) on delete cascade,
+  table_id bigint not null references tables(id) on delete cascade,
+  table_number integer not null check (table_number > 0),
+  status text not null default 'pending' check (status in ('pending', 'acknowledged', 'cancelled')),
+  message text not null default 'เรียกพนักงาน',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  acknowledged_at timestamp with time zone
+);
+
 -- 3. INDEXES
 create index if not exists idx_staff_pin on staff(pin);
+create index if not exists idx_tables_is_active on tables(is_active);
 create index if not exists idx_sessions_table_id on sessions(table_id);
 create index if not exists idx_sessions_status on sessions(status);
 create index if not exists idx_menu_items_category_id on menu_items(category_id);
 create index if not exists idx_menu_option_groups_menu_item_id on menu_option_groups(menu_item_id);
 create index if not exists idx_menu_option_choices_group_id on menu_option_choices(option_group_id);
+create index if not exists idx_menu_item_variants_menu_item_id on menu_item_variants(menu_item_id);
+create index if not exists idx_menu_item_images_menu_item_id on menu_item_images(menu_item_id);
+create unique index if not exists menu_item_images_one_primary_per_item on menu_item_images(menu_item_id) where is_primary;
 create index if not exists idx_orders_session_id on orders(session_id);
 create index if not exists idx_order_items_order_id on order_items(order_id);
 create index if not exists idx_print_jobs_status on print_jobs(status);
+create index if not exists idx_pos_devices_active on pos_devices(is_active) where is_active;
+create index if not exists idx_staff_calls_status_created_at on staff_calls(status, created_at desc);
+create index if not exists idx_staff_calls_session_id on staff_calls(session_id);
 -- Enforce a table can only have one active session at a time (partial unique index)
 create unique index if not exists session_active_unique_per_table on sessions(table_id) where (status = 'active');
 
@@ -138,9 +189,13 @@ alter table categories enable row level security;
 alter table menu_items enable row level security;
 alter table menu_option_groups enable row level security;
 alter table menu_option_choices enable row level security;
+alter table menu_item_variants enable row level security;
+alter table menu_item_images enable row level security;
 alter table orders enable row level security;
 alter table order_items enable row level security;
 alter table print_jobs enable row level security;
+alter table pos_devices enable row level security;
+alter table staff_calls enable row level security;
 
 -- staff policies
 drop policy if exists "Allow service_role full access to staff" on staff;
@@ -195,6 +250,20 @@ create policy "Allow public read access to menu_option_choices" on menu_option_c
 drop policy if exists "Allow service_role full access to menu_option_choices" on menu_option_choices;
 create policy "Allow service_role full access to menu_option_choices" on menu_option_choices for all using (true);
 
+-- menu item variants policies
+drop policy if exists "Allow public read access to menu_item_variants" on menu_item_variants;
+create policy "Allow public read access to menu_item_variants" on menu_item_variants for select using (true);
+
+drop policy if exists "Allow service_role full access to menu_item_variants" on menu_item_variants;
+create policy "Allow service_role full access to menu_item_variants" on menu_item_variants for all using (true);
+
+-- menu item images policies
+drop policy if exists "Allow public read access to menu_item_images" on menu_item_images;
+create policy "Allow public read access to menu_item_images" on menu_item_images for select using (true);
+
+drop policy if exists "Allow service_role full access to menu_item_images" on menu_item_images;
+create policy "Allow service_role full access to menu_item_images" on menu_item_images for all using (true);
+
 -- orders policies
 drop policy if exists "Allow public read access to orders" on orders;
 create policy "Allow public read access to orders" on orders for select using (true);
@@ -218,6 +287,17 @@ create policy "Allow service_role full access to order_items" on order_items for
 -- print_jobs policies
 drop policy if exists "Allow service_role full access to print_jobs" on print_jobs;
 create policy "Allow service_role full access to print_jobs" on print_jobs for all using (true);
+
+-- pos_devices policies
+drop policy if exists "Allow service_role full access to pos_devices" on pos_devices;
+create policy "Allow service_role full access to pos_devices" on pos_devices for all using (true);
+
+-- staff_calls policies
+drop policy if exists "Allow public read access to staff_calls" on staff_calls;
+create policy "Allow public read access to staff_calls" on staff_calls for select using (true);
+
+drop policy if exists "Allow service_role full access to staff_calls" on staff_calls;
+create policy "Allow service_role full access to staff_calls" on staff_calls for all using (true);
 
 -- 5. TRIGGER FOR TABLE STATUS SYNCHRONIZATION
 create or replace function handle_table_status_on_session_change()
@@ -247,8 +327,8 @@ on conflict (pin) do nothing;
 
 -- Insert default packages (only if id doesn't exist)
 insert into packages (id, name, price, description) values
-('standard', 'Standard Buffet', 308.00, 'หมูสด ผักสด ซุปใสต้มยำ'),
-('premium', 'Premium Buffet', 398.00, 'Standard + เนื้อวากิว ซีฟู้ด ซุปทรัฟเฟิล')
+('standard', 'Standard', 308.00, 'หมูสด ผักสด ซุปใสต้มยำ'),
+('premium', 'Premium', 398.00, 'Standard + เนื้อวากิว ซีฟู้ด ซุปทรัฟเฟิล')
 on conflict (id) do nothing;
 
 -- Insert tables 1 to 28 (only if table_number doesn't exist)

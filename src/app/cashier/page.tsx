@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Home, Receipt, Settings, LogOut } from 'lucide-react';
+import { Home, Receipt, Settings, LogOut, RefreshCw } from 'lucide-react';
 import { getTablesAndSessions, openTableSession, closeTableSession, logoutStaff } from '../actions';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -38,6 +38,8 @@ interface Package {
   description: string;
 }
 
+type TableFilter = 'all' | 'vacant' | 'standard' | 'premium';
+
 // Modern Vector Shabu Pot Icon matching the logo's branding with S-curve, tea-colored Sukiyaki soup, and warm copper finish
 type ModernShabuIconProps = {
   className?: string;
@@ -48,7 +50,6 @@ type ModernShabuIconProps = {
 const ModernShabuIcon = React.memo(function ModernShabuIcon({
   className = "w-14 h-14",
   isOccupied = false,
-  isPremium = false,
 }: ModernShabuIconProps) {
   // Outline and base colors based on state
   const strokeColor = isOccupied ? "stroke-[#6e371a]" : "stroke-neutral-300";
@@ -125,46 +126,13 @@ const ModernShabuIcon = React.memo(function ModernShabuIcon({
   );
 });
 
-function formatLiveTime() {
-  const now = new Date();
-  return now.toLocaleDateString('th-TH', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  }) + ' น.';
-}
-
-function LiveClock() {
-  const [liveTime, setLiveTime] = useState<string>('');
-
-  useEffect(() => {
-    setLiveTime(formatLiveTime());
-    const interval = setInterval(() => {
-      setLiveTime(formatLiveTime());
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  if (!liveTime) return null;
-
-  return (
-    <div className="flex items-center gap-2 bg-neutral-50 px-4 py-2.5 rounded-2xl border border-neutral-200 text-xs sm:text-sm font-black text-neutral-700">
-      <span className="material-symbols-outlined text-[18px] text-neutral-500">schedule</span>
-      <span>{liveTime}</span>
-    </div>
-  );
-}
-
 export default function CashierPage() {
   const router = useRouter();
   const [tables, setTables] = useState<TableWithSession[]>([]);
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [tableFilter, setTableFilter] = useState<TableFilter>('all');
   
   // Modal states
   const [selectedTable, setSelectedTable] = useState<TableWithSession | null>(null);
@@ -183,7 +151,6 @@ export default function CashierPage() {
     packagePrice: number;
     openedAt: string;
   } | null>(null);
-  const [elapsedTime, setElapsedTime] = useState<string>('');
 
   // App URL for QR Code
   const [appUrl, setAppUrl] = useState('http://localhost:3000');
@@ -194,36 +161,6 @@ export default function CashierPage() {
     }
     fetchData();
   }, []);
-
-  useEffect(() => {
-    if (!checkoutTableSession) return;
-    
-    const calculateElapsed = () => {
-      const table = tables.find(t => t.table_number === checkoutTableSession.tableNumber);
-      const activeSession = table?.sessions?.[0];
-      if (!activeSession) return '0 นาที';
-      
-      const openedTime = new Date(activeSession.opened_at).getTime();
-      const now = new Date().getTime();
-      const diffMs = now - openedTime;
-      if (diffMs < 0) return '0 นาที';
-      
-      const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
-      const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-      
-      if (diffHrs > 0) {
-        return `${diffHrs} ชั่วโมง ${diffMins} นาที`;
-      }
-      return `${diffMins} นาที`;
-    };
-
-    setElapsedTime(calculateElapsed());
-    const timer = setInterval(() => {
-      setElapsedTime(calculateElapsed());
-    }, 30000);
-
-    return () => clearInterval(timer);
-  }, [checkoutTableSession, tables]);
 
   async function fetchData() {
     setLoading(true);
@@ -340,16 +277,34 @@ export default function CashierPage() {
   // Stats calculation
   const totalTables = tables.length;
   const vacantTables = tables.filter(t => t.status === 'vacant').length;
-  const occupiedTables = tables.filter(t => t.status === 'occupied').length;
   const standardTables = tables.filter(
     t => t.status === 'occupied' && t.sessions?.[0]?.package_id === 'standard'
   ).length;
   const premiumTables = tables.filter(
     t => t.status === 'occupied' && t.sessions?.[0]?.package_id === 'premium'
   ).length;
+  const tableFilters: Array<{ id: TableFilter; label: string; count: number }> = [
+    { id: 'all', label: 'โต๊ะทั้งหมด', count: totalTables },
+    { id: 'vacant', label: 'โต๊ะว่าง', count: vacantTables },
+    { id: 'standard', label: 'Standard', count: standardTables },
+    { id: 'premium', label: 'Premium', count: premiumTables },
+  ];
+  const filteredTables = tables.filter((table) => {
+    const activeSession = table.sessions?.[0];
+
+    if (tableFilter === 'vacant') {
+      return table.status === 'vacant';
+    }
+
+    if (tableFilter === 'standard' || tableFilter === 'premium') {
+      return table.status === 'occupied' && activeSession?.package_id === tableFilter;
+    }
+
+    return true;
+  });
 
   return (
-    <div className="min-h-screen bg-[#faf9f8] font-sans flex">
+    <div className="min-h-screen bg-[#faf9f8] font-sans flex overflow-x-hidden">
       {/* Sidebar - Desktop Only */}
       <aside className="hidden lg:flex w-64 bg-gradient-to-b from-[#af101a] to-[#800c13] text-white flex-col fixed inset-y-0 left-0 z-30 border-r border-[#800c13] shadow-lg">
         {/* Logo and Brand */}
@@ -402,31 +357,85 @@ export default function CashierPage() {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 lg:pl-64 min-h-screen flex flex-col pb-20 lg:pb-0">
+      <div className="flex-1 lg:pl-64 min-h-screen flex flex-col pb-20 lg:pb-0 min-w-0 overflow-x-hidden">
+        <header className="sticky top-0 z-20 border-b border-neutral-200 bg-[#faf9f8]/95 backdrop-blur-xl">
+          <div className="lg:hidden h-16 bg-gradient-to-r from-[#af101a] to-[#800c13] text-white flex items-center justify-between px-4 border-b border-[#800c13] shadow-md">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-full overflow-hidden border border-white/20 shrink-0">
+                <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+              </div>
+              <div className="min-w-0">
+                <h2 className="font-black text-xs tracking-tight truncate">ตี๋อ้วน สุกี้ชาบู</h2>
+                <p className="text-[9px] text-white/70 font-bold truncate">ระบบแคชเชียร์และเปิดโต๊ะ</p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={fetchData}
+              aria-label="รีเฟรชข้อมูล"
+              title="รีเฟรชข้อมูล"
+              className="w-10 h-10 rounded-full bg-white/10 text-white border border-white/10 active:scale-95 transition-all flex items-center justify-center cursor-pointer shrink-0"
+            >
+              <RefreshCw className="w-5 h-5" strokeWidth={2.7} />
+            </button>
+          </div>
+
+          <div className="px-4 sm:px-6 lg:px-8 lg:pt-5">
+            <div className="hidden lg:flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <h1 className="text-xl sm:text-2xl font-black text-[#af101a] tracking-tight leading-tight">
+                  ตี๋อ้วน สุกี้ชาบู
+                </h1>
+                <p className="text-xs sm:text-sm text-neutral-500 font-extrabold mt-0.5 truncate">
+                  ระบบแคชเชียร์และเปิดโต๊ะ
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={fetchData}
+                  aria-label="รีเฟรชข้อมูล"
+                  title="รีเฟรชข้อมูล"
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white text-[#af101a] border border-red-100 shadow-xs hover:bg-red-50 hover:border-red-200 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
+                >
+                  <RefreshCw className="w-5 h-5" strokeWidth={2.6} />
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-3 lg:mt-4 grid grid-cols-4 border-b border-neutral-200">
+              {tableFilters.map((filter) => {
+                const isActive = tableFilter === filter.id;
+
+                return (
+                  <button
+                    key={filter.id}
+                    type="button"
+                    onClick={() => setTableFilter(filter.id)}
+                    className={`min-w-0 px-1.5 sm:px-4 py-2.5 sm:py-3 border-b-2 transition-all text-center cursor-pointer ${
+                      isActive
+                        ? 'border-[#af101a] text-[#af101a]'
+                        : 'border-transparent text-[#80610a] hover:text-[#af101a]'
+                    }`}
+                  >
+                    <span className="block text-[11px] min-[390px]:text-xs sm:text-base font-black leading-tight truncate">
+                      {filter.label}
+                    </span>
+                    <span className={`block text-[10px] sm:text-xs font-extrabold mt-1 ${
+                      isActive ? 'text-[#af101a]' : 'text-neutral-400'
+                    }`}>
+                      {filter.count} โต๊ะ
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </header>
+
         <div className="p-4 sm:p-6 lg:p-8 flex-1">
-          {/* Header */}
-      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 bg-white p-5 rounded-[24px] border border-neutral-200 shadow-xs">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#af101a] shadow-xs flex-shrink-0">
-            <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
-          </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-black text-[#af101a] tracking-tight leading-tight">ตี๋อ้วน สุกี้ชาบู</h1>
-            <p className="text-xs text-neutral-500 font-bold mt-0.5">ระบบบริการจัดการแคชเชียร์และเปิดโต๊ะ (Cashier Terminal)</p>
-          </div>
-        </div>
-        
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
-          <LiveClock />
-          <button 
-            onClick={fetchData} 
-            className="flex items-center justify-center gap-2 bg-[#af101a] hover:bg-[#900e15] text-white px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold shadow-sm hover:shadow-md transition-all cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-[18px]">sync</span>
-            รีเฟรชข้อมูล
-          </button>
-        </div>
-      </header>
 
       {/* Main Content */}
       {error && (
@@ -438,12 +447,6 @@ export default function CashierPage() {
 
       {loading ? (
         <div className="space-y-6">
-          {/* Skeleton Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, idx) => (
-              <div key={idx} className="shimmer-bg h-24 rounded-3xl border border-neutral-200"></div>
-            ))}
-          </div>
           {/* Skeleton Tables */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {Array.from({ length: 28 }).map((_, idx) => (
@@ -453,56 +456,18 @@ export default function CashierPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Stats Summary Panel */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Total Tables */}
-            <div className="bg-white border border-neutral-200/90 rounded-3xl p-4 sm:p-5 shadow-xs flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-neutral-100 flex items-center justify-center text-neutral-600 flex-shrink-0">
-                <ModernShabuIcon className="w-8 h-8" isOccupied={true} isPremium={false} />
-              </div>
-              <div>
-                <div className="text-[11px] font-black text-neutral-400 uppercase tracking-wider">โต๊ะทั้งหมด</div>
-                <div className="text-xl sm:text-2xl font-black text-neutral-800">{totalTables} โต๊ะ</div>
-              </div>
-            </div>
-
-            {/* Vacant Tables */}
-            <div className="bg-white border border-neutral-200/90 rounded-3xl p-4 sm:p-5 shadow-xs flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
-                <span className="material-symbols-outlined text-2xl font-bold">event_seat</span>
-              </div>
-              <div>
-                <div className="text-[11px] font-black text-emerald-600 uppercase tracking-wider">โต๊ะว่าง</div>
-                <div className="text-xl sm:text-2xl font-black text-emerald-700">{vacantTables} โต๊ะ</div>
-              </div>
-            </div>
-
-            {/* Standard Buffet */}
-            <div className="bg-white border border-neutral-200/90 rounded-3xl p-4 sm:p-5 shadow-xs flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-[#af101a] flex-shrink-0">
-                <span className="material-symbols-outlined text-2xl font-bold">restaurant</span>
-              </div>
-              <div>
-                <div className="text-[11px] font-black text-[#af101a] uppercase tracking-wider">Standard (329.-)</div>
-                <div className="text-xl sm:text-2xl font-black text-red-700">{standardTables} โต๊ะ</div>
-              </div>
-            </div>
-
-            {/* Premium Buffet */}
-            <div className="bg-white border border-neutral-200/90 rounded-3xl p-4 sm:p-5 shadow-xs flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 flex-shrink-0">
-                <span className="material-symbols-outlined text-2xl font-bold">star</span>
-              </div>
-              <div>
-                <div className="text-[11px] font-black text-amber-600 uppercase tracking-wider">Premium (499.-)</div>
-                <div className="text-xl sm:text-2xl font-black text-amber-700">{premiumTables} โต๊ะ</div>
-              </div>
-            </div>
-          </div>
-
           {/* Tables Grid */}
+          {filteredTables.length === 0 ? (
+            <div className="min-h-[260px] rounded-[28px] border border-dashed border-neutral-200 bg-white/70 flex flex-col items-center justify-center text-center px-6">
+              <div className="w-14 h-14 rounded-2xl bg-red-50 text-[#af101a] flex items-center justify-center mb-3">
+                <span className="material-symbols-outlined text-3xl">table_restaurant</span>
+              </div>
+              <div className="text-lg font-black text-neutral-800">ไม่พบโต๊ะในหมวดนี้</div>
+              <div className="text-sm font-bold text-neutral-400 mt-1">ลองเลือกตัวกรองอื่นเพื่อดูรายการโต๊ะ</div>
+            </div>
+          ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {tables.map((table) => {
+            {filteredTables.map((table) => {
               const activeSession = table.sessions && table.sessions[0];
               const isOccupied = table.status === 'occupied' && activeSession;
               const isPremium = isOccupied && activeSession.package_id === 'premium';
@@ -537,7 +502,7 @@ export default function CashierPage() {
                   {/* Card Center: Modern Vector Shabu Table Icon */}
                   <div className="flex justify-center items-center my-2.5 flex-grow">
                     <ModernShabuIcon 
-                      className="w-[90px] h-[90px] transition-transform duration-300 group-hover:scale-110" 
+                      className="w-[104px] h-[104px] transition-transform duration-300 group-hover:scale-110" 
                       isOccupied={!!isOccupied} 
                       isPremium={isPremium} 
                     />
@@ -546,17 +511,12 @@ export default function CashierPage() {
                   {/* Action / Timing info */}
                   {isOccupied ? (
                     <div className="space-y-2.5 mt-auto">
-                      <div className="flex items-center justify-center gap-1 text-[10px] font-bold text-neutral-500 bg-neutral-100/80 py-1 px-2 rounded-lg">
-                        <span className="material-symbols-outlined text-[13px]">schedule</span>
-                        <span>เปิด {new Date(activeSession.opened_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })} น.</span>
-                      </div>
-                      
                       <div className="flex gap-1.5">
                         <button
                           onClick={() => setQrModalSession({
                             id: activeSession.id,
                             tableNumber: table.table_number,
-                            packageName: activeSession.package_id === 'premium' ? 'Premium Buffet' : 'Standard Buffet',
+                            packageName: activeSession.package_id === 'premium' ? 'Premium' : 'Standard',
                             openedAt: new Date(activeSession.opened_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
                           })}
                           className="flex items-center justify-center w-10 h-10 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-xl border border-neutral-200 transition-colors cursor-pointer"
@@ -571,7 +531,7 @@ export default function CashierPage() {
                               setCheckoutTableSession({
                                 sessionId: activeSession.id,
                                 tableNumber: table.table_number,
-                                packageName: pkg?.name || (activeSession.package_id === 'premium' ? 'Premium Buffet' : 'Standard Buffet'),
+                                packageName: pkg?.name || (activeSession.package_id === 'premium' ? 'Premium' : 'Standard'),
                                 packagePrice: pkg?.price || (activeSession.package_id === 'premium' ? 499 : 329),
                                 openedAt: new Date(activeSession.opened_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })
                               });
@@ -600,6 +560,7 @@ export default function CashierPage() {
               );
             })}
           </div>
+          )}
         </div>
       )}
 
@@ -699,7 +660,6 @@ export default function CashierPage() {
               </div>
 
               <div className="text-[10px] text-neutral-400 font-bold mt-2 leading-relaxed">
-                เวลาพิมพ์ใบเสร็จ: {qrModalSession.openedAt} น.<br />
                 *สแกนคิวอาร์โค้ดนี้เพื่อเริ่มต้นการสั่งอาหาร*
               </div>
             </div>
@@ -764,27 +724,7 @@ export default function CashierPage() {
                 </span>
               </div>
 
-              <div className="border-t border-dashed border-neutral-300 my-4"></div>
-
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-bold text-neutral-400 flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[14px]">login</span>
-                  เวลาเปิดโต๊ะ
-                </span>
-                <span className="text-xs font-bold text-neutral-700">
-                  {checkoutTableSession.openedAt} น.
-                </span>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-neutral-400 flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[14px]">hourglass_empty</span>
-                  เวลาที่ทานไปแล้ว
-                </span>
-                <span className="text-xs font-black text-neutral-700 bg-neutral-200/60 px-2.5 py-0.5 rounded-lg">
-                  {elapsedTime || 'คำนวณเวลา...'}
-                </span>
-              </div>
+              <div className="border-t border-dashed border-neutral-300 mt-4"></div>
             </div>
 
             {/* Warning Message */}

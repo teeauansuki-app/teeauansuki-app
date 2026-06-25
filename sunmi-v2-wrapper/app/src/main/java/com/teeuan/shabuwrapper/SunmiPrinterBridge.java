@@ -61,7 +61,7 @@ public class SunmiPrinterBridge {
             }
 
             String sessionId = UUID.randomUUID().toString();
-            String packageName = "premium".equals(normalizedPackage) ? "Premium Buffet" : "Standard Buffet";
+            String packageName = "premium".equals(normalizedPackage) ? "Premium" : "Standard";
             String now = new SimpleDateFormat("HH:mm", Locale.forLanguageTag("th-TH")).format(new Date());
             String qrUrl = mainActivity.getOrderBaseUrl()
                     + "/s/" + sessionId

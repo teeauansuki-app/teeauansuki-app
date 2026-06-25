@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "516247958737",
+    "project_id": "tee-auan-shabu",
+    "storage_bucket": "tee-auan-shabu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516247958737:android:e525d9eb48616b6028c1f0",
+        "android_client_info": {
+          "package_name": "com.teeuan.shabuwrapper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTJb0SfsYNua3RG9uGyvE9h8P-vwL-Za8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

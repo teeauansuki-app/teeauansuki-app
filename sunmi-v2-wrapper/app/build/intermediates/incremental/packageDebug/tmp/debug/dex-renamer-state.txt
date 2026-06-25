@@ -1,10 +1,13 @@
-#Wed Jun 24 15:16:59 ICT 2026
+#Thu Jun 25 01:17:30 ICT 2026
 base.0=C\:\\Users\\Riew\\Desktop\\Job_NBV\\ตี๋อ้วน-สุกี้ชาบู\\sunmi-v2-wrapper\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\Users\\Riew\\Desktop\\Job_NBV\\ตี๋อ้วน-สุกี้ชาบู\\sunmi-v2-wrapper\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 base.2=C\:\\Users\\Riew\\Desktop\\Job_NBV\\ตี๋อ้วน-สุกี้ชาบู\\sunmi-v2-wrapper\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\6\\classes.dex
+base.3=C\:\\Users\\Riew\\Desktop\\Job_NBV\\ตี๋อ้วน-สุกี้ชาบู\\sunmi-v2-wrapper\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
 path.0=classes.dex
 path.1=0/classes.dex
 path.2=6/classes.dex
+path.3=classes2.dex
 renamed.0=classes.dex
 renamed.1=classes2.dex
 renamed.2=classes3.dex
+renamed.3=classes4.dex

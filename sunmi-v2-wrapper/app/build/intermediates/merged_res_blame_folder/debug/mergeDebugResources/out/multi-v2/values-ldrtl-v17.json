@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.teeuan.shabuwrapper.app-mergeDebugResources-30:/values-ldrtl-v17/values-ldrtl-v17.xml",
+            "outputFile": "com.teeuan.shabuwrapper.app-mergeDebugResources-35:/values-ldrtl-v17/values-ldrtl-v17.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Riew\\.gradle\\caches\\9.0.0\\transforms\\45f834be0855531ca8c1f39c31f4025d\\transformed\\material-1.11.0\\res\\values-ldrtl-v17\\values-ldrtl-v17.xml",
+                    "source": "C:\\Users\\Riew\\.gradle\\caches\\9.0.0\\transforms\\de67c513a58c69e2ff013c28f4ebb37a\\transformed\\material-1.11.0\\res\\values-ldrtl-v17\\values-ldrtl-v17.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

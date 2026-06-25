@@ -3,6 +3,7 @@
 import { getSupabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { createSign } from 'node:crypto';
 
 // ==========================================
 // MOCK DATA STORAGE FOR PREVIEW MODE (When Supabase is not configured yet)
@@ -12,6 +13,7 @@ let mockTables = Array.from({ length: 18 }, (_, i) => ({
   id: i + 1,
   table_number: i + 1,
   status: i === 2 || i === 7 ? 'occupied' : 'vacant',
+  is_active: true,
   created_at: new Date().toISOString(),
   sessions: i === 2 ? [{
     id: 'mock-session-3',
@@ -29,8 +31,8 @@ let mockTables = Array.from({ length: 18 }, (_, i) => ({
 }));
 
 let mockPackages = [
-  { id: 'standard', name: 'Standard Buffet', price: 308.00, description: 'หมูสด ผักสด ซุปใสต้มยำ' },
-  { id: 'premium', name: 'Premium Buffet', price: 398.00, description: 'Standard + เนื้อวากิว ซีฟู้ด ซุปทรัฟเฟิล' }
+  { id: 'standard', name: 'Standard', price: 308.00, description: 'หมูสด ผักสด ซุปใสต้มยำ' },
+  { id: 'premium', name: 'Premium', price: 398.00, description: 'Standard + เนื้อวากิว ซีฟู้ด ซุปทรัฟเฟิล' }
 ];
 
 let mockCategories = [
@@ -41,7 +43,7 @@ let mockCategories = [
   { id: 5, name: 'Drinks', description: 'เครื่องดื่มรีฟิลดับกระหาย', sort_order: 5 }
 ];
 
-let mockMenuItems = [
+let mockMenuItems: any[] = [
   { id: 1, category_id: 1, name: 'Standard Pork Set', description: 'ชุดหมูสไลด์รวม ผักสด และน้ำซุปมาตรฐาน', price: 0, package_ids: ['standard', 'premium'], is_available: true, image_url: '' },
   { id: 2, category_id: 1, name: 'Premium Beef Set', description: 'ชุดเนื้อวัวพรีเมียม วากิว ซีฟู้ด และน้ำซุปเลือกได้ทุกรสชาติ', price: 0, package_ids: ['premium'], is_available: true, image_url: '' },
   { id: 3, category_id: 2, name: 'Pork Belly', description: 'หมูสามชั้นสไลด์บางพอดีคำ รสชาตินุ่มละมุน', price: 0, package_ids: ['standard', 'premium'], is_available: true, image_url: '' },
@@ -80,7 +82,7 @@ let mockOrders: any[] = [
     created_at: new Date(Date.now() - 5 * 60000).toISOString(),
     sessions: {
       tables: { table_number: 3 },
-      packages: { name: 'Standard Buffet', id: 'standard' }
+      packages: { name: 'Standard', id: 'standard' }
     },
     order_items: [
       { id: 1, menu_item_id: 3, quantity: 2, notes: 'ขอผักเยอะๆ', menu_items: { name: 'Pork Belly' } },
@@ -99,7 +101,7 @@ let mockPrintJobs: any[] = [
       id: 1001,
       sessions: {
         tables: { table_number: 3 },
-        packages: { name: 'Standard Buffet' }
+        packages: { name: 'Standard' }
       },
       order_items: [
         { id: 1, menu_item_id: 3, quantity: 2, notes: 'ขอผักเยอะๆ', menu_items: { name: 'Pork Belly' } },
@@ -108,6 +110,9 @@ let mockPrintJobs: any[] = [
     }
   }
 ];
+
+let mockStaffCalls: any[] = [];
+let mockPosDevices: any[] = [];
 
 function sortMenuItemsByCategory(items: any[], categories: any[]) {
   const categoryOrder = new Map(
@@ -127,6 +132,94 @@ function sortMenuItemsByCategory(items: any[], categories: any[]) {
 
     return String(a.name || '').localeCompare(String(b.name || ''), 'th');
   });
+}
+
+function base64Url(input: string | Buffer) {
+  return Buffer.from(input)
+    .toString('base64')
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
+}
+
+async function getFirebaseAccessToken() {
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+
+  if (!projectId || !clientEmail || !privateKey) {
+    return null;
+  }
+
+  const now = Math.floor(Date.now() / 1000);
+  const header = { alg: 'RS256', typ: 'JWT' };
+  const payload = {
+    iss: clientEmail,
+    scope: 'https://www.googleapis.com/auth/firebase.messaging',
+    aud: 'https://oauth2.googleapis.com/token',
+    iat: now,
+    exp: now + 3600,
+  };
+
+  const unsignedJwt = `${base64Url(JSON.stringify(header))}.${base64Url(JSON.stringify(payload))}`;
+  const signature = createSign('RSA-SHA256').update(unsignedJwt).sign(privateKey);
+  const jwt = `${unsignedJwt}.${base64Url(signature)}`;
+
+  const response = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion: jwt,
+    }),
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Firebase token request failed: ${details}`);
+  }
+
+  const data = await response.json();
+  return data.access_token as string;
+}
+
+async function sendFcmNotification(token: string, title: string, body: string, data: Record<string, string>) {
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const accessToken = await getFirebaseAccessToken();
+
+  if (!projectId || !accessToken) {
+    return { sent: false, reason: 'missing_firebase_env' };
+  }
+
+  const response = await fetch(`https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message: {
+        token,
+        notification: { title, body },
+        data,
+        android: {
+          priority: 'HIGH',
+          notification: {
+            channel_id: 'tee_uan_staff_calls',
+            sound: 'default',
+            default_vibrate_timings: true,
+          },
+        },
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`FCM send failed: ${details}`);
+  }
+
+  return { sent: true };
 }
 
 function normalizeOptionGroups(groups: any[] = []) {
@@ -153,6 +246,53 @@ function normalizeOptionGroups(groups: any[] = []) {
     .sort((a, b) => a.sort_order - b.sort_order);
 }
 
+function normalizeMenuVariants(variants: any[] = []) {
+  return [...variants]
+    .map((variant, variantIndex) => {
+      const minQuantity = Number.isFinite(Number(variant.min_quantity)) ? Number(variant.min_quantity) : 1;
+      const maxQuantity = Number.isFinite(Number(variant.max_quantity)) ? Number(variant.max_quantity) : Math.max(minQuantity, 1);
+
+      return {
+        id: variant.id,
+        menu_item_id: variant.menu_item_id,
+        name: String(variant.name || '').trim(),
+        min_quantity: Math.max(0, minQuantity),
+        max_quantity: Math.max(Math.max(0, minQuantity), maxQuantity),
+        sort_order: Number.isFinite(Number(variant.sort_order)) ? Number(variant.sort_order) : variantIndex + 1,
+      };
+    })
+    .filter(variant => variant.name.length > 0 && variant.max_quantity > 0)
+    .sort((a, b) => a.sort_order - b.sort_order);
+}
+
+function normalizeMenuImages(images: any[] = [], fallbackImageUrl = '') {
+  const normalized = [...images]
+    .map((image, imageIndex) => ({
+      id: image.id,
+      menu_item_id: image.menu_item_id,
+      image_url: String(image.image_url || image.url || '').trim(),
+      sort_order: Number.isFinite(Number(image.sort_order)) ? Number(image.sort_order) : imageIndex + 1,
+      is_primary: Boolean(image.is_primary || imageIndex === 0),
+    }))
+    .filter(image => image.image_url.length > 0)
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .map((image, imageIndex) => ({
+      ...image,
+      sort_order: imageIndex + 1,
+      is_primary: imageIndex === 0,
+    }));
+
+  if (normalized.length === 0 && fallbackImageUrl) {
+    return [{
+      image_url: fallbackImageUrl,
+      sort_order: 1,
+      is_primary: true,
+    }];
+  }
+
+  return normalized;
+}
+
 function formatSelectedOptions(options: any[] = []) {
   return options
     .map(option => ({
@@ -162,6 +302,19 @@ function formatSelectedOptions(options: any[] = []) {
       choice_names: Array.isArray(option.choice_names) ? option.choice_names.map((name: any) => String(name || '').trim()).filter(Boolean) : [],
     }))
     .filter(option => option.group_name && option.choice_names.length > 0);
+}
+
+function formatSelectedVariant(variant: any) {
+  if (!variant) return null;
+  const name = String(variant.variant_name || variant.name || '').trim();
+  const id = Number(variant.variant_id || variant.id || 0);
+
+  if (!name && !id) return null;
+
+  return {
+    variant_id: id || null,
+    variant_name: name,
+  };
 }
 
 function validateSelectedOptions(menuItem: any, selectedOptions: any[] = []) {
@@ -182,6 +335,32 @@ function validateSelectedOptions(menuItem: any, selectedOptions: any[] = []) {
       throw new Error(`ตัวเลือก "${group.name}" เลือกได้สูงสุด ${maxSelect} รายการ`);
     }
   }
+}
+
+function validateSelectedVariant(menuItem: any, selectedVariant: any, quantity: number) {
+  const variants = normalizeMenuVariants(menuItem?.variants || menuItem?.menu_item_variants || []);
+
+  if (variants.length === 0) {
+    return null;
+  }
+
+  const normalizedVariant = formatSelectedVariant(selectedVariant);
+  const variant = normalizedVariant?.variant_id
+    ? variants.find(itemVariant => itemVariant.id === normalizedVariant.variant_id)
+    : variants.find(itemVariant => itemVariant.name === normalizedVariant?.variant_name);
+
+  if (!variant) {
+    throw new Error(`กรุณาเลือกขนาดของ "${menuItem?.name || 'เมนูนี้'}"`);
+  }
+
+  if (quantity < variant.min_quantity || quantity > variant.max_quantity) {
+    throw new Error(`"${menuItem?.name || 'เมนูนี้'}" แบบ${variant.name} เลือกได้ ${variant.min_quantity}-${variant.max_quantity} รายการ`);
+  }
+
+  return {
+    variant_id: variant.id,
+    variant_name: variant.name,
+  };
 }
 
 type OfflineSessionContext = {
@@ -237,6 +416,7 @@ async function ensureOfflineSession(
     .from('tables')
     .select('id, table_number')
     .eq('table_number', offlineContext.tableNumber)
+    .eq('is_active', true)
     .maybeSingle();
 
   if (tableError) {
@@ -285,7 +465,7 @@ async function attachOptionGroupsToMenuItems(supabase: any, items: any[] = []) {
 
   const itemIds = items.map(item => item.id).filter(Boolean);
   if (itemIds.length === 0) {
-    return items.map(item => ({ ...item, option_groups: [] }));
+    return items.map(item => ({ ...item, option_groups: [], variants: [], images: normalizeMenuImages([], item.image_url || '') }));
   }
 
   const { data: groups, error: groupsError } = await supabase
@@ -328,10 +508,71 @@ async function attachOptionGroupsToMenuItems(supabase: any, items: any[] = []) {
     groupsByItem.set(group.menu_item_id, list);
   }
 
-  return items.map(item => ({
+  return attachMenuVariantsAndImages(supabase, items.map(item => ({
     ...item,
     option_groups: normalizeOptionGroups(groupsByItem.get(item.id) || []),
-  }));
+  })));
+}
+
+async function attachMenuVariantsAndImages(supabase: any, items: any[] = []) {
+  if (items.length === 0) return [];
+
+  const itemIds = items.map(item => item.id).filter(Boolean);
+  if (itemIds.length === 0) {
+    return items.map(item => ({ ...item, variants: [], images: normalizeMenuImages([], item.image_url || '') }));
+  }
+
+  const { data: variants, error: variantsError } = await supabase
+    .from('menu_item_variants')
+    .select('*')
+    .in('menu_item_id', itemIds)
+    .order('sort_order', { ascending: true });
+
+  if (variantsError) {
+    const message = String(variantsError.message || '');
+    if (!message.includes('menu_item_variants')) {
+      throw new Error(`Failed to fetch menu variants: ${variantsError.message}`);
+    }
+  }
+
+  const { data: images, error: imagesError } = await supabase
+    .from('menu_item_images')
+    .select('*')
+    .in('menu_item_id', itemIds)
+    .order('sort_order', { ascending: true });
+
+  if (imagesError) {
+    const message = String(imagesError.message || '');
+    if (!message.includes('menu_item_images')) {
+      throw new Error(`Failed to fetch menu images: ${imagesError.message}`);
+    }
+  }
+
+  const variantsByItem = new Map<number, any[]>();
+  for (const variant of variants || []) {
+    const list = variantsByItem.get(variant.menu_item_id) || [];
+    list.push(variant);
+    variantsByItem.set(variant.menu_item_id, list);
+  }
+
+  const imagesByItem = new Map<number, any[]>();
+  for (const image of images || []) {
+    const list = imagesByItem.get(image.menu_item_id) || [];
+    list.push(image);
+    imagesByItem.set(image.menu_item_id, list);
+  }
+
+  return items.map(item => {
+    const itemImages = normalizeMenuImages(imagesByItem.get(item.id) || [], item.image_url || '');
+    const primaryImage = itemImages.find(image => image.is_primary) || itemImages[0];
+
+    return {
+      ...item,
+      variants: normalizeMenuVariants(variantsByItem.get(item.id) || []),
+      images: itemImages,
+      image_url: primaryImage?.image_url || item.image_url || '',
+    };
+  });
 }
 
 // ==========================================
@@ -373,6 +614,7 @@ export async function openTableSession(tableId: number, packageId: string) {
     .from('tables')
     .select('id, table_number')
     .eq('id', tableId)
+    .eq('is_active', true)
     .single();
 
   if (tableError || !table) {
@@ -587,7 +829,7 @@ export async function getMenuForSession(sessionId: string, offlineContext?: Offl
 // Customer: Submit Food Order
 export async function submitOrder(
   sessionId: string,
-  cartItems: { menuItemId: number; quantity: number; notes?: string; selectedOptions?: any[] }[]
+  cartItems: { menuItemId: number; quantity: number; notes?: string; selectedOptions?: any[]; selectedVariant?: any }[]
 ) {
   if (!isSupabaseConfigured) {
     let activeSession: any = null;
@@ -612,12 +854,16 @@ export async function submitOrder(
     const orderItems = cartItems.map((item, idx) => {
       const menuItem = mockMenuItems.find(m => m.id === item.menuItemId);
       validateSelectedOptions(menuItem, item.selectedOptions || []);
+      const selectedVariant = validateSelectedVariant(menuItem, item.selectedVariant, item.quantity);
       return {
         id: idx + 1,
         menu_item_id: item.menuItemId,
         quantity: item.quantity,
         notes: item.notes || '',
-        selected_options: formatSelectedOptions(item.selectedOptions || []),
+        selected_options: [
+          ...(selectedVariant ? [{ group_name: 'ขนาด', choice_names: [selectedVariant.variant_name], variant_id: selectedVariant.variant_id }] : []),
+          ...formatSelectedOptions(item.selectedOptions || []),
+        ],
         menu_items: { name: menuItem ? menuItem.name : 'Unknown Item' }
       };
     });
@@ -676,12 +922,16 @@ export async function submitOrder(
     throw new Error(`โหลดตัวเลือกเมนูไม่สำเร็จ: ${optionMenuError.message}`);
   }
 
-  const menuItemsWithOptions = await attachOptionGroupsToMenuItems(supabase, orderMenuItems || []);
-  const menuItemById = new Map(menuItemsWithOptions.map(item => [item.id, item]));
+  const menuItemsWithDetails = await attachOptionGroupsToMenuItems(supabase, orderMenuItems || []);
+  const menuItemById = new Map(menuItemsWithDetails.map(item => [item.id, item]));
+  const selectedVariantsByLine = new Map<number, any>();
 
-  for (const item of cartItems) {
-    validateSelectedOptions(menuItemById.get(item.menuItemId), item.selectedOptions || []);
-  }
+  cartItems.forEach((item, index) => {
+    const menuItem = menuItemById.get(item.menuItemId);
+    validateSelectedOptions(menuItem, item.selectedOptions || []);
+    const selectedVariant = validateSelectedVariant(menuItem, item.selectedVariant, item.quantity);
+    if (selectedVariant) selectedVariantsByLine.set(index, selectedVariant);
+  });
 
   // 2. Create Order
   const { data: order, error: orderError } = await supabase
@@ -698,12 +948,21 @@ export async function submitOrder(
   }
 
   // 3. Create Order Items
-  const itemsToInsert = cartItems.map((item) => ({
+  const itemsToInsert = cartItems.map((item, index) => ({
     order_id: order.id,
     menu_item_id: item.menuItemId,
     quantity: item.quantity,
     notes: item.notes || '',
-    selected_options: formatSelectedOptions(item.selectedOptions || []),
+    selected_options: [
+      ...(selectedVariantsByLine.has(index)
+        ? [{
+            group_name: 'ขนาด',
+            choice_names: [selectedVariantsByLine.get(index).variant_name],
+            variant_id: selectedVariantsByLine.get(index).variant_id,
+          }]
+        : []),
+      ...formatSelectedOptions(item.selectedOptions || []),
+    ],
   }));
 
   const { error: itemsError } = await supabase
@@ -730,6 +989,203 @@ export async function submitOrder(
   return { success: true, orderId: order.id };
 }
 
+// Customer: Call staff from table
+export async function callStaff(sessionId: string, requestType: 'staff' | 'soup' = 'staff') {
+  if (!sessionId) {
+    throw new Error('ไม่พบเซสชันโต๊ะ');
+  }
+
+  const requestMessage = requestType === 'soup' ? 'เติมน้ำซุป' : 'เรียกพนักงาน';
+
+  if (!isSupabaseConfigured) {
+    const table = mockTables.find(item => item.sessions.some(session => session.id === sessionId && session.status === 'active'));
+    if (!table) {
+      throw new Error('โต๊ะนี้ปิดบริการแล้ว');
+    }
+
+    const recentCall = mockStaffCalls.find(call => (
+      call.session_id === sessionId
+      && call.status === 'pending'
+      && call.message === requestMessage
+      && Date.now() - new Date(call.created_at).getTime() < 30000
+    ));
+
+    if (recentCall) {
+      return { success: true, duplicate: true, pushSent: false };
+    }
+
+    mockStaffCalls.unshift({
+      id: mockStaffCalls.length + 1,
+      session_id: sessionId,
+      table_id: table.id,
+      table_number: table.table_number,
+      status: 'pending',
+      message: requestMessage,
+      created_at: new Date().toISOString(),
+      acknowledged_at: null,
+    });
+
+    revalidatePath('/admin');
+    return { success: true, duplicate: false, pushSent: false };
+  }
+
+  const supabase = getSupabaseAdmin();
+
+  const { data: session, error: sessionError } = await supabase
+    .from('sessions')
+    .select('id, table_id, status, package_id, tables(table_number), packages(name)')
+    .eq('id', sessionId)
+    .eq('status', 'active')
+    .single();
+
+  if (sessionError || !session) {
+    throw new Error('โต๊ะนี้ปิดบริการแล้ว');
+  }
+
+  const recentThreshold = new Date(Date.now() - 30000).toISOString();
+  const { data: recentCall } = await supabase
+    .from('staff_calls')
+    .select('id')
+    .eq('session_id', sessionId)
+    .eq('status', 'pending')
+    .eq('message', requestMessage)
+    .gte('created_at', recentThreshold)
+    .maybeSingle();
+
+  if (recentCall) {
+    return { success: true, duplicate: true, pushSent: false };
+  }
+
+  const sessionRow: any = session;
+  const tableNumber = Array.isArray(sessionRow.tables)
+    ? sessionRow.tables[0]?.table_number
+    : sessionRow.tables?.table_number;
+
+  const { data: staffCall, error: callError } = await supabase
+    .from('staff_calls')
+    .insert({
+      session_id: sessionRow.id,
+      table_id: sessionRow.table_id,
+      table_number: tableNumber,
+      status: 'pending',
+      message: requestMessage,
+    })
+    .select()
+    .single();
+
+  if (callError || !staffCall) {
+    throw new Error(`บันทึกการเรียกพนักงานไม่สำเร็จ: ${callError?.message}`);
+  }
+
+  const { data: devices } = await supabase
+    .from('pos_devices')
+    .select('id, fcm_token')
+    .eq('is_active', true);
+
+  const packageName = Array.isArray(sessionRow.packages)
+    ? sessionRow.packages[0]?.name
+    : sessionRow.packages?.name;
+  const title = `โต๊ะ ${tableNumber} ${requestMessage}`;
+  const body = packageName ? `${packageName} - ${requestMessage}` : requestMessage;
+  let pushSent = false;
+
+  await Promise.all((devices || []).map(async (device) => {
+    try {
+      const result = await sendFcmNotification(String(device.fcm_token), title, body, {
+        type: 'staff_call',
+        staffCallId: String(staffCall.id),
+        sessionId,
+        tableNumber: String(tableNumber || ''),
+        table_number: String(tableNumber || ''),
+        requestType,
+        message: requestMessage,
+      });
+      pushSent = pushSent || result.sent;
+    } catch (err) {
+      console.error('Failed to send staff call notification:', err);
+    }
+  }));
+
+  revalidatePath('/admin');
+  revalidatePath('/cashier');
+
+  return { success: true, duplicate: false, pushSent };
+}
+
+export async function registerPosDevice(data: { name?: string; fcm_token?: string }) {
+  const name = String(data.name || 'SUNMI V2 POS').trim();
+  const fcmToken = String(data.fcm_token || '').trim();
+
+  if (fcmToken.length < 40) {
+    throw new Error('FCM token ไม่ถูกต้อง');
+  }
+
+  if (!isSupabaseConfigured) {
+    const existing = mockPosDevices.find(device => device.fcm_token === fcmToken);
+    if (existing) {
+      existing.name = name;
+      existing.is_active = true;
+      existing.last_seen_at = new Date().toISOString();
+    } else {
+      mockPosDevices.unshift({
+        id: mockPosDevices.length + 1,
+        name,
+        fcm_token: fcmToken,
+        is_active: true,
+        last_seen_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+      });
+    }
+    revalidatePath('/admin');
+    return { success: true };
+  }
+
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase
+    .from('pos_devices')
+    .upsert({
+      name,
+      fcm_token: fcmToken,
+      is_active: true,
+      last_seen_at: new Date().toISOString(),
+    }, { onConflict: 'fcm_token' });
+
+  if (error) {
+    throw new Error(`บันทึกเครื่อง POS ไม่สำเร็จ: ${error.message}`);
+  }
+
+  revalidatePath('/admin');
+  return { success: true };
+}
+
+export async function acknowledgeStaffCall(callId: number) {
+  if (!isSupabaseConfigured) {
+    const call = mockStaffCalls.find(item => item.id === callId);
+    if (call) {
+      call.status = 'acknowledged';
+      call.acknowledged_at = new Date().toISOString();
+    }
+    revalidatePath('/admin');
+    return { success: true };
+  }
+
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase
+    .from('staff_calls')
+    .update({
+      status: 'acknowledged',
+      acknowledged_at: new Date().toISOString(),
+    })
+    .eq('id', callId);
+
+  if (error) {
+    throw new Error(`อัปเดตการเรียกพนักงานไม่สำเร็จ: ${error.message}`);
+  }
+
+  revalidatePath('/admin');
+  return { success: true };
+}
+
 // Cashier & Admin Dashboard Data Fetching
 export async function getTablesAndSessions() {
   if (!isSupabaseConfigured) {
@@ -745,6 +1201,7 @@ export async function getTablesAndSessions() {
   const { data: tablesData, error: tablesError } = await supabase
     .from('tables')
     .select('*, sessions(*)')
+    .eq('is_active', true)
     .order('table_number', { ascending: true });
 
   if (tablesError) {
@@ -765,6 +1222,120 @@ export async function getTablesAndSessions() {
     tables: tablesData || [],
     packages: packagesData || [],
   };
+}
+
+// Admin: Tables CRUD
+export async function manageTable(
+  action: 'create' | 'delete',
+  data: any
+) {
+  const tableNumber = Number(data.table_number);
+
+  if (action === 'create') {
+    if (!Number.isInteger(tableNumber) || tableNumber <= 0) {
+      throw new Error('กรุณากรอกเลขโต๊ะเป็นจำนวนเต็มบวก');
+    }
+  }
+
+  if (!isSupabaseConfigured) {
+    if (action === 'create') {
+      const existing = mockTables.find(table => table.table_number === tableNumber);
+      if (existing?.is_active) {
+        throw new Error(`โต๊ะ ${tableNumber} มีอยู่แล้ว`);
+      }
+      if (existing) {
+        existing.is_active = true;
+        existing.status = 'vacant';
+        existing.sessions = [];
+      } else {
+        mockTables.push({
+          id: Math.max(0, ...mockTables.map(table => table.id)) + 1,
+          table_number: tableNumber,
+          status: 'vacant',
+          is_active: true,
+          created_at: new Date().toISOString(),
+          sessions: [],
+        });
+      }
+    } else if (action === 'delete') {
+      const tableId = Number(data.id);
+      const table = mockTables.find(item => item.id === tableId);
+      if (!table) throw new Error('ไม่พบโต๊ะนี้');
+      if (table.status === 'occupied' || table.sessions.some((session: any) => session.status === 'active')) {
+        throw new Error('ไม่สามารถลบโต๊ะที่กำลังเปิดบริการอยู่ได้');
+      }
+      table.is_active = false;
+      table.status = 'vacant';
+      table.sessions = [];
+    }
+    revalidatePath('/admin');
+    revalidatePath('/cashier');
+    return { success: true };
+  }
+
+  const supabase = getSupabaseAdmin();
+
+  if (action === 'create') {
+    const { data: existingTable, error: existingError } = await supabase
+      .from('tables')
+      .select('id, table_number, status, is_active')
+      .eq('table_number', tableNumber)
+      .maybeSingle();
+
+    if (existingError) {
+      throw new Error(existingError.message);
+    }
+
+    if (existingTable?.is_active) {
+      throw new Error(`โต๊ะ ${tableNumber} มีอยู่แล้ว`);
+    }
+
+    const { error } = existingTable
+      ? await supabase
+          .from('tables')
+          .update({ is_active: true, status: 'vacant' })
+          .eq('id', existingTable.id)
+      : await supabase
+          .from('tables')
+          .insert({ table_number: tableNumber, status: 'vacant', is_active: true });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+  } else if (action === 'delete') {
+    const tableId = Number(data.id);
+    if (!Number.isInteger(tableId) || tableId <= 0) {
+      throw new Error('ไม่พบโต๊ะนี้');
+    }
+
+    const { data: activeSessions, error: sessionError } = await supabase
+      .from('sessions')
+      .select('id')
+      .eq('table_id', tableId)
+      .eq('status', 'active')
+      .limit(1);
+
+    if (sessionError) {
+      throw new Error(sessionError.message);
+    }
+
+    if ((activeSessions || []).length > 0) {
+      throw new Error('ไม่สามารถลบโต๊ะที่กำลังเปิดบริการอยู่ได้');
+    }
+
+    const { error } = await supabase
+      .from('tables')
+      .update({ is_active: false, status: 'vacant' })
+      .eq('id', tableId);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  revalidatePath('/admin');
+  revalidatePath('/cashier');
+  return { success: true };
 }
 
 // Admin: Categories CRUD
@@ -881,6 +1452,69 @@ async function saveMenuOptionGroups(supabase: any, menuItemId: number, optionGro
   }
 }
 
+async function saveMenuVariants(supabase: any, menuItemId: number, variants: any[] = []) {
+  const normalizedVariants = normalizeMenuVariants(variants);
+
+  const { error: deleteError } = await supabase
+    .from('menu_item_variants')
+    .delete()
+    .eq('menu_item_id', menuItemId);
+
+  if (deleteError) {
+    throw new Error(deleteError.message);
+  }
+
+  if (normalizedVariants.length === 0) return;
+
+  const variantsToInsert = normalizedVariants.map((variant, index) => ({
+    menu_item_id: menuItemId,
+    name: variant.name,
+    min_quantity: variant.min_quantity,
+    max_quantity: variant.max_quantity,
+    sort_order: index + 1,
+  }));
+
+  const { error: insertError } = await supabase
+    .from('menu_item_variants')
+    .insert(variantsToInsert);
+
+  if (insertError) {
+    throw new Error(insertError.message);
+  }
+}
+
+async function saveMenuImages(supabase: any, menuItemId: number, images: any[] = [], fallbackImageUrl = '') {
+  const normalizedImages = normalizeMenuImages(images, fallbackImageUrl);
+
+  const { error: deleteError } = await supabase
+    .from('menu_item_images')
+    .delete()
+    .eq('menu_item_id', menuItemId);
+
+  if (deleteError) {
+    throw new Error(deleteError.message);
+  }
+
+  if (normalizedImages.length === 0) return '';
+
+  const imagesToInsert = normalizedImages.map((image, index) => ({
+    menu_item_id: menuItemId,
+    image_url: image.image_url,
+    sort_order: index + 1,
+    is_primary: index === 0,
+  }));
+
+  const { error: insertError } = await supabase
+    .from('menu_item_images')
+    .insert(imagesToInsert);
+
+  if (insertError) {
+    throw new Error(insertError.message);
+  }
+
+  return imagesToInsert[0]?.image_url || '';
+}
+
 export async function manageMenuItem(
   action: 'create' | 'update' | 'delete',
   data: any
@@ -895,8 +1529,10 @@ export async function manageMenuItem(
         price: 0,
         package_ids: data.package_ids || [],
         is_available: data.is_available ?? true,
-        image_url: data.image_url || '',
+        image_url: normalizeMenuImages(data.images || [], data.image_url || '')[0]?.image_url || '',
         option_groups: normalizeOptionGroups(data.option_groups || []),
+        variants: normalizeMenuVariants(data.variants || []),
+        images: normalizeMenuImages(data.images || [], data.image_url || ''),
       });
     } else if (action === 'update') {
       const idx = mockMenuItems.findIndex(m => m.id === data.id);
@@ -909,8 +1545,10 @@ export async function manageMenuItem(
           price: 0,
           package_ids: data.package_ids || [],
           is_available: data.is_available ?? true,
-          image_url: data.image_url || '',
+          image_url: normalizeMenuImages(data.images || [], data.image_url || '')[0]?.image_url || '',
           option_groups: normalizeOptionGroups(data.option_groups || []),
+          variants: normalizeMenuVariants(data.variants || []),
+          images: normalizeMenuImages(data.images || [], data.image_url || ''),
         };
       }
     } else if (action === 'delete') {
@@ -921,6 +1559,8 @@ export async function manageMenuItem(
   }
 
   const supabase = getSupabaseAdmin();
+  const normalizedImages = normalizeMenuImages(data.images || [], data.image_url || '');
+  const primaryImageUrl = normalizedImages[0]?.image_url || data.image_url || '';
 
   if (action === 'create') {
     const { data: createdItem, error } = await supabase.from('menu_items').insert({
@@ -928,13 +1568,15 @@ export async function manageMenuItem(
       name: data.name,
       description: data.description || '',
       price: 0,
-      image_url: data.image_url || '',
+      image_url: primaryImageUrl,
       package_ids: data.package_ids,
       is_available: data.is_available ?? true,
     }).select('id').single();
     if (error) throw new Error(error.message);
     if (createdItem) {
       await saveMenuOptionGroups(supabase, createdItem.id, data.option_groups || []);
+      await saveMenuVariants(supabase, createdItem.id, data.variants || []);
+      await saveMenuImages(supabase, createdItem.id, normalizedImages, primaryImageUrl);
     }
   } else if (action === 'update') {
     const { error } = await supabase
@@ -944,13 +1586,15 @@ export async function manageMenuItem(
         name: data.name,
         description: data.description || '',
         price: 0,
-        image_url: data.image_url || '',
+        image_url: primaryImageUrl,
         package_ids: data.package_ids,
         is_available: data.is_available ?? true,
       })
       .eq('id', data.id);
     if (error) throw new Error(error.message);
     await saveMenuOptionGroups(supabase, data.id, data.option_groups || []);
+    await saveMenuVariants(supabase, data.id, data.variants || []);
+    await saveMenuImages(supabase, data.id, normalizedImages, primaryImageUrl);
   } else if (action === 'delete') {
     const { error } = await supabase.from('menu_items').delete().eq('id', data.id);
     if (error) throw new Error(error.message);
@@ -1033,6 +1677,11 @@ export async function getAdminDashboardData() {
       activeSessions: active,
       recentOrders: mockOrders,
       pendingPrintJobs: pending,
+      staffCalls: mockStaffCalls.filter(call => call.status === 'pending'),
+      posDevices: mockPosDevices.map(({ fcm_token, ...device }) => device),
+      tables: mockTables
+        .filter(table => table.is_active)
+        .sort((a, b) => a.table_number - b.table_number),
       categories: mockCategories,
       menuItems: formattedMenuItems,
       packages: mockPackages,
@@ -1085,6 +1734,35 @@ export async function getAdminDashboardData() {
     .eq('status', 'pending')
     .order('created_at', { ascending: true });
 
+  const { data: staffCalls } = await supabase
+    .from('staff_calls')
+    .select(`
+      id,
+      session_id,
+      table_id,
+      table_number,
+      status,
+      message,
+      created_at,
+      sessions (
+        packages (name)
+      )
+    `)
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false })
+    .limit(30);
+
+  const { data: posDevices } = await supabase
+    .from('pos_devices')
+    .select('id, name, is_active, last_seen_at, created_at')
+    .order('last_seen_at', { ascending: false });
+
+  const { data: tables } = await supabase
+    .from('tables')
+    .select('*, sessions(*)')
+    .eq('is_active', true)
+    .order('table_number', { ascending: true });
+
   // 4. Get categories & menus
   const { data: categories } = await supabase
     .from('categories')
@@ -1108,6 +1786,9 @@ export async function getAdminDashboardData() {
     activeSessions: activeSessions || [],
     recentOrders: recentOrders || [],
     pendingPrintJobs: pendingPrintJobs || [],
+    staffCalls: staffCalls || [],
+    posDevices: posDevices || [],
+    tables: tables || [],
     categories: categories || [],
     menuItems: sortMenuItemsByCategory(await attachOptionGroupsToMenuItems(supabase, menuItems || []), categories || []),
     packages: packages || [],

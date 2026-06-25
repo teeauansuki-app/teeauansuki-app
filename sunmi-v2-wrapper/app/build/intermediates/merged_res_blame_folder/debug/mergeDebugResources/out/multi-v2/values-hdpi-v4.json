@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.teeuan.shabuwrapper.app-mergeDebugResources-30:/values-hdpi-v4/values-hdpi-v4.xml",
+            "outputFile": "com.teeuan.shabuwrapper.app-mergeDebugResources-35:/values-hdpi-v4/values-hdpi-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Riew\\.gradle\\caches\\9.0.0\\transforms\\5f8d2e5121c010acd1b988b82897ffa6\\transformed\\appcompat-1.6.1\\res\\values-hdpi-v4\\values-hdpi-v4.xml",
+                    "source": "C:\\Users\\Riew\\.gradle\\caches\\9.0.0\\transforms\\8e87fc54424134f190cf6e26b0bd53df\\transformed\\appcompat-1.6.1\\res\\values-hdpi-v4\\values-hdpi-v4.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

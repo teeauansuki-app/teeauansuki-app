@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>เข้าสู่ระบบออฟไลน์</title>
   <style>
+    @font-face {
+      font-family: "Sukhumvit Set";
+      src: url("fonts/SukhumvitSet-Bold.ttf") format("truetype");
+      font-weight: 700 1000;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
       --brand: #af101a;
       --brand-dark: #800c13;
@@ -22,8 +30,8 @@
       margin: 0;
       overflow: hidden;
       background:
-        radial-gradient(circle at 18% 10%, rgba(175,16,26,.08), transparent 30%),
-        radial-gradient(circle at 90% 88%, rgba(253,192,3,.10), transparent 34%),
+        radial-gradient(circle at -10% -10%, rgba(175,16,26,.08), transparent 32%),
+        radial-gradient(circle at 110% 110%, rgba(253,192,3,.08), transparent 36%),
         var(--bg);
       color: var(--ink);
       font-family: "Sukhumvit Set", "Tahoma", sans-serif;
@@ -32,17 +40,18 @@
 
     .screen {
       height: 100%;
-      padding: 18px 18px 20px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
+      gap: 18px;
     }
 
     .brand {
       width: 100%;
       text-align: center;
-      padding-top: 8px;
+      padding-top: 6px;
     }
 
     .logo {
@@ -51,46 +60,26 @@
       border-radius: 999px;
       object-fit: cover;
       background: #fff;
-      border: 2px solid var(--brand);
-      box-shadow: 0 12px 24px rgba(175,16,26,.14);
+      border: 1px solid var(--brand);
+      box-shadow: 0 8px 20px rgba(175,16,26,.12);
     }
 
     h1 {
-      margin: 10px 0 0;
-      color: var(--ink);
-      font-size: 28px;
+      margin: 12px 0 0;
+      color: var(--brand);
+      font-size: 24px;
       line-height: 1.05;
       font-weight: 1000;
       letter-spacing: 0;
     }
 
     .sub {
-      margin-top: 4px;
-      color: var(--brand);
-      font-size: 15px;
+      margin-top: 6px;
+      color: #a3a3a3;
+      font-size: 10px;
       font-weight: 1000;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      margin-top: 10px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: #fff2f3;
-      border: 1px solid #efc6ca;
-      color: var(--brand);
-      font-size: 13px;
-      font-weight: 1000;
-    }
-
-    .badge::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: .18em;
     }
 
     .notice {
@@ -109,77 +98,93 @@
 
     .panel {
       width: 100%;
-      max-width: 390px;
-      margin: 14px auto 0;
-      padding: 17px;
-      border-radius: 34px;
-      background: rgba(255,255,255,.78);
-      border: 1px solid rgba(255,255,255,.9);
-      box-shadow: 0 24px 70px rgba(0,0,0,.045);
-      backdrop-filter: blur(16px);
+      max-width: 300px;
+      margin: 0 auto;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
     }
 
     .pin-box {
-      height: 58px;
+      height: auto;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
-      border-radius: 24px;
-      background: #fff;
-      border: 1px solid var(--line);
-      box-shadow: inset 0 1px 0 rgba(0,0,0,.02);
+      gap: 20px;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
     }
 
     .dot {
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       border-radius: 999px;
-      border: 2px solid #decaca;
-      background: #fff;
+      border: 2px solid rgba(175,16,26,.30);
+      background: transparent;
+      transition: all .16s ease;
     }
 
     .dot.on {
       border-color: var(--brand);
-      background: var(--brand);
-      box-shadow: 0 0 0 5px rgba(175,16,26,.08);
+      background: linear-gradient(90deg, var(--brand), #db272e);
+      transform: scale(1.1);
+      box-shadow: 0 0 12px rgba(175,16,26,.40);
     }
 
     .err {
-      height: 22px;
-      margin-top: 9px;
+      min-height: 18px;
+      margin: 16px 0 0;
       text-align: center;
       color: var(--brand);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 1000;
+      letter-spacing: .02em;
+    }
+
+    .prompt {
+      min-height: 18px;
+      margin: 16px 0 0;
+      text-align: center;
+      color: #a3a3a3;
+      font-size: 12px;
+      font-weight: 900;
     }
 
     .keypad {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 9px;
-      margin-top: 8px;
+      column-gap: 16px;
+      row-gap: 16px;
+      margin-top: 16px;
+      justify-items: center;
     }
 
     .key {
       position: relative;
-      height: 74px;
+      width: 80px;
+      height: 80px;
       border: 0;
       background: transparent;
       color: #fff;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 1000;
       cursor: pointer;
       touch-action: manipulation;
+      padding: 0;
+      transition: transform .1s ease;
     }
 
     .key .pot {
       position: absolute;
-      inset: 1px;
-      border-radius: 999px;
-      background: var(--brand);
-      border: 2px solid var(--brand-dark);
-      box-shadow: 0 5px 0 var(--brand-dark), 0 10px 18px rgba(175,16,26,.18);
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      color: var(--brand);
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,.03));
     }
 
     .key span {
@@ -189,40 +194,74 @@
     }
 
     .key:active .pot {
-      transform: translateY(3px) scale(.98);
-      box-shadow: 0 2px 0 var(--brand-dark), 0 6px 12px rgba(175,16,26,.14);
+      transform: scale(.95);
     }
 
     .key.alt .pot {
-      background: #fff;
-      border-color: #e5d6d4;
-      box-shadow: 0 4px 0 #d6c7c5, 0 8px 14px rgba(0,0,0,.05);
+      display: none;
     }
 
     .key.alt span {
       color: var(--brand);
-      font-size: 16px;
+      font-size: 12px;
       text-shadow: none;
     }
 
-    .foot {
-      max-width: 340px;
-      color: var(--muted);
-      text-align: center;
-      font-size: 12px;
-      font-weight: 900;
-      line-height: 1.38;
-      padding-bottom: 2px;
+    .spacer { height: 20px; width: 100%; }
+
+    @media (min-width: 420px) {
+      .screen {
+        justify-content: center;
+        gap: 24px;
+      }
+
+      .logo {
+        width: 128px;
+        height: 128px;
+      }
+
+      h1 { font-size: 30px; }
+
+      .key {
+        width: 96px;
+        height: 96px;
+      }
+
+      .key span { font-size: 30px; }
+
+      .key.alt span { font-size: 14px; }
+
+      .keypad {
+        max-width: 348px;
+        column-gap: 24px;
+        row-gap: 20px;
+      }
+
+      .panel {
+        max-width: 348px;
+      }
     }
   </style>
 </head>
 <body>
   <main class="screen">
+    <svg width="0" height="0" style="position:absolute;visibility:hidden" aria-hidden="true">
+      <symbol id="pot-key" viewBox="0 0 100 100">
+        <rect x="8" y="44" width="8" height="12" rx="4" fill="currentColor" stroke="#800c13" stroke-width="2"></rect>
+        <rect x="84" y="44" width="8" height="12" rx="4" fill="currentColor" stroke="#800c13" stroke-width="2"></rect>
+        <circle cx="50" cy="50" r="36" fill="currentColor" stroke="#800c13" stroke-width="2"></circle>
+        <circle cx="50" cy="50" r="33" fill="#800c13"></circle>
+        <path d="M50 20 A30 30 0 0 0 50 80 C33 65 67 35 50 20 Z" fill="currentColor"></path>
+        <path d="M50 20 C67 35 33 65 50 80 A30 30 0 0 0 50 20 Z" fill="currentColor"></path>
+        <path d="M50 20 C67 35 33 65 50 80" stroke="#800c13" stroke-width="2.5" stroke-linecap="round"></path>
+        <circle cx="50" cy="50" r="30" fill="none" stroke="#800c13" stroke-width="2.5"></circle>
+      </symbol>
+    </svg>
+
     <section class="brand">
       <img class="logo" src="file:///android_res/drawable/logo.jpg" alt="ตี๋อ้วน สุกี้ชาบู">
       <h1>ตี๋อ้วน สุกี้ชาบู</h1>
-      <div class="sub">หลังบ้านผู้ดูแลระบบ</div>
-      <div class="badge">โหมดออฟไลน์</div>
+      <div class="sub">Staff Access Portal</div>
       <div id="notice" class="notice"></div>
     </section>
 
@@ -232,23 +271,24 @@
         <i class="dot"></i><i class="dot"></i><i class="dot"></i>
       </div>
       <div id="err" class="err"></div>
+      <div id="prompt" class="prompt">กรุณากรอกรหัส PIN 6 หลักเพื่อเข้าสู่ระบบ</div>
       <div class="keypad">
-        <button class="key" onclick="n('1')"><i class="pot"></i><span>1</span></button>
-        <button class="key" onclick="n('2')"><i class="pot"></i><span>2</span></button>
-        <button class="key" onclick="n('3')"><i class="pot"></i><span>3</span></button>
-        <button class="key" onclick="n('4')"><i class="pot"></i><span>4</span></button>
-        <button class="key" onclick="n('5')"><i class="pot"></i><span>5</span></button>
-        <button class="key" onclick="n('6')"><i class="pot"></i><span>6</span></button>
-        <button class="key" onclick="n('7')"><i class="pot"></i><span>7</span></button>
-        <button class="key" onclick="n('8')"><i class="pot"></i><span>8</span></button>
-        <button class="key" onclick="n('9')"><i class="pot"></i><span>9</span></button>
-        <button class="key alt" onclick="clearPin()"><i class="pot"></i><span>ล้าง</span></button>
-        <button class="key" onclick="n('0')"><i class="pot"></i><span>0</span></button>
-        <button class="key alt" onclick="back()"><i class="pot"></i><span>ลบ</span></button>
+        <button class="key" onclick="n('1')"><svg class="pot"><use href="#pot-key" xlink:href="#pot-key"></use></svg><span>1</span></button>
+        <button class="key" onclick="n('2')"><svg class="pot"><use href="#pot-key" xlink:href="#pot-key"></use></svg><span>2</span></button>
+        <button class="key" onclick="n('3')"><svg class="pot"><use href="#pot-key" xlink:href="#pot-key"></use></svg><span>3</span></button>
+        <button class="key" onclick="n('4')"><svg class="pot"><use href="#pot-key" xlink:href="#pot-key"></use></svg><span>4</span></button>
+        <button class="key" onclick="n('5')"><svg class="pot"><use href="#pot-key" xlink:href="#pot-key"></use></svg><span>5</span></button>
+        <button class="key" onclick="n('6')"><svg class="pot"><use href="#pot-key" xlink:href="#pot-key"></use></svg><span>6</span></button>
+        <button class="key" onclick="n('7')"><svg class="pot"><use href="#pot-key" xlink:href="#pot-key"></use></svg><span>7</span></button>
+        <button class="key" onclick="n('8')"><svg class="pot"><use href="#pot-key" xlink:href="#pot-key"></use></svg><span>8</span></button>
+        <button class="key" onclick="n('9')"><svg class="pot"><use href="#pot-key" xlink:href="#pot-key"></use></svg><span>9</span></button>
+        <button class="key alt" onclick="clearPin()"><span>ล้างรหัส</span></button>
+        <button class="key" onclick="n('0')"><svg class="pot"><use href="#pot-key" xlink:href="#pot-key"></use></svg><span>0</span></button>
+        <button class="key alt" onclick="back()" aria-label="ลบ"><span>ลบ</span></button>
       </div>
     </section>
 
-    <div class="foot">ใช้สำหรับเปิดโต๊ะและพิมพ์ QR เมื่อเครื่อง SUNMI ไม่มีอินเทอร์เน็ต</div>
+    <div class="spacer" aria-hidden="true"></div>
   </main>
 
   <script>
@@ -265,6 +305,7 @@
       dots.forEach(function(dot, index) {
         dot.classList.toggle('on', index < pin.length);
       });
+      document.getElementById('prompt').style.display = document.getElementById('err').textContent ? 'none' : 'block';
     }
 
     function n(value) {
@@ -293,6 +334,7 @@
         return;
       }
       document.getElementById('err').textContent = 'รหัส PIN ไม่ถูกต้อง';
+      document.getElementById('prompt').style.display = 'none';
       setTimeout(clearPin, 650);
     }
   </script>

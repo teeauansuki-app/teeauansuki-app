@@ -1,6 +1,10 @@
 [
     {
-        "merged": "com.teeuan.shabuwrapper.app-debug-32:/drawable_logo.jpg.flat",
-        "source": "com.teeuan.shabuwrapper.app-main-34:/drawable/logo.jpg"
+        "merged": "com.teeuan.shabuwrapper.app-debug-37:/drawable_logo.jpg.flat",
+        "source": "com.teeuan.shabuwrapper.app-main-39:/drawable/logo.jpg"
+    },
+    {
+        "merged": "com.teeuan.shabuwrapper.app-debug-37:/drawable_ic_staff_call_notification.xml.flat",
+        "source": "com.teeuan.shabuwrapper.app-main-39:/drawable/ic_staff_call_notification.xml"
     }
 ]

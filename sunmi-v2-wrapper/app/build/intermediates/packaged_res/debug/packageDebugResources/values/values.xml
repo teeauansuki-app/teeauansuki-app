@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tee Uan Cashier Print</string>
+    <string name="gcm_defaultSenderId" translatable="false">516247958737</string>
+    <string name="google_api_key" translatable="false">AIzaSyDTJb0SfsYNua3RG9uGyvE9h8P-vwL-Za8</string>
+    <string name="google_app_id" translatable="false">1:516247958737:android:e525d9eb48616b6028c1f0</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDTJb0SfsYNua3RG9uGyvE9h8P-vwL-Za8</string>
+    <string name="google_storage_bucket" translatable="false">tee-auan-shabu.firebasestorage.app</string>
+    <string name="project_id" translatable="false">tee-auan-shabu</string>
 </resources>
